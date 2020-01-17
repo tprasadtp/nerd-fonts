@@ -1,0 +1,17 @@
+name: build
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install FontForge
+      run: |
+        sudo add-apt-repository ppa:fontforge/fontforge -y -u
+        sudo apt-get install -y fontforge python-pip
+        sudo -H pip install configparser
+    - name: Prepare
+      run: make prepare
+    - name: Build Patched fonts
+      run: make fonts
