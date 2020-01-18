@@ -1,0 +1,70 @@
+name: release
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install FontForge
+      run: |
+        sudo add-apt-repository ppa:fontforge/fontforge -y -u
+        sudo apt-get install -y fontforge python-pip
+        sudo -H pip install configparser
+    - name: Prepare
+      run: make prepare
+    - name: Build Patched fonts
+      run: make fonts
+    - name: Generate checksums
+      run: |
+        cd build
+        sha256sum StarshipCode-Regular-NerdFont.ttf > SHA256SUMS
+        sha256sum StarshipCode-Mono-NerdFont.ttf >> SHA256SUMS
+    # Because github action's way of referencing commits and tags sucks
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+    # create arelease on tag
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.get_version.outputs.VERSION }}
+        release_name: Release ${{ steps.get_version.outputs.VERSION }}
+        draft: false
+        prerelease: false
+
+    # Upload Release assets
+    - name: Upload Regular Font
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/StarshipCode-Regular-NerdFont.ttf
+        asset_name: StarshipCode-Regular-NerdFont.ttf
+        asset_content_type: font/ttf
+    - name: Upload Mono Font
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/StarshipCode-Mono-NerdFont.ttf
+        asset_name: StarshipCode-Mono-NerdFont.ttf
+        asset_content_type: font/ttf
+    - name: Upload Checksums
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/SHA256SUMS
+        asset_name: SHA256SUMS
+        asset_content_type: text/plain

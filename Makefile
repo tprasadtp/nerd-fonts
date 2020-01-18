@@ -1,6 +1,7 @@
 SHELL := /bin/bash
 
-CASCADIA_CODE_VERSION := "v1911.21"
+CASCADIA_CODE_VERSION ?= v1911.21
+ROOT_DIR := $(strip $(patsubst %/, %, $(dir $(realpath $(firstword $(MAKEFILE_LIST))))))
 
 .PHONY: help
 help: ## This help dialog.
@@ -23,18 +24,23 @@ help: ## This help dialog.
 .PHONY: fonts
 fonts: ## Make all fonts
 	@echo -e "\033[1;92m➜ $@ \033[0m"
-	@if [ -f src/meta/.prepared ]; then \
+	@mkdir -p "$(ROOT_DIR)/build"
+	@if [ -f $(ROOT_DIR)/vendor/.prepared ]; then \
 	echo -e "\033[1;34m‣ StarshipCode\033[0m"; \
-	fontforge -script src/font-patcher -sL --complete --no-progressbars src/cascadia/Cascadia.ttf; \
-	fontforge sripts/rename-font --input "Cascadia Code Nerd Font Complete.ttf" \
-                                 --output "StarshipCode Nerd Font.ttf" \
+	fontforge --script "$(ROOT_DIR)/vendor/font-patcher" -l --quiet --complete --no-progressbars "$(ROOT_DIR)/vendor/cascadia/Cascadia.ttf"; \
+	echo " - renaming"; \
+	fontforge --script "$(ROOT_DIR)/scripts/rename-font" --input "$(ROOT_DIR)/Cascadia Code Regular Nerd Font Complete.ttf" \
+                                 --output "$(ROOT_DIR)/build/StarshipCode-Regular-NerdFont.ttf" \
                                  --name "StarshipCode" \
+								 --type "Regular" \
                                  --version "$(CASCADIA_CODE_VERSION)"; \
 	echo -e "\033[1;34m‣ StarshipCodeMono\033[0m"; \
-	fontforge -script src/font-patcher -sL --complete --no-progressbars src/cascadia/CascadiaMono.ttf; \
-	fontforge sripts/rename-font --input "Cascadia Mono Regular Nerd Font Complete.ttf" \
-                                 --output "StarshipCodeMono.ttf" \
-                                 --name "StarshipCodeMono" \
+	fontforge --script "$(ROOT_DIR)/vendor/font-patcher" -l --quiet --complete --no-progressbars "$(ROOT_DIR)/vendor/cascadia/CascadiaMono.ttf"; \
+	echo " - renaming"; \
+	fontforge --script "$(ROOT_DIR)/scripts/rename-font" --input "$(ROOT_DIR)/Cascadia Mono Regular Nerd Font Complete.ttf" \
+                                 --output "$(ROOT_DIR)/build/StarshipCode-Mono-NerdFont.ttf" \
+                                 --name "StarshipCode" \
+								 --type "Mono" \
                                  --version "$(CASCADIA_CODE_VERSION)"; \
 	else \
 		echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
@@ -46,42 +52,38 @@ prepare: ## Download external assets required
 	@echo -e "\033[1;92m➜ $@ \033[0m"
 
 	@echo -e "\033[1;34m‣ Downloading Cascadia Fonts...\033[0m"
-	@mkdir -p src/cascadia
-	@curl -sL https://github.com/microsoft/cascadia-code/releases/download/$(CASCADIA_CODE_VERSION)/Cascadia.ttf  --output 'src/cascadia/Cascadia.ttf'
-	@curl -sL https://github.com/microsoft/cascadia-code/releases/download/$(CASCADIA_CODE_VERSION)/CascadiaMono.ttf  --output 'src/cascadia/CascadiaMono.ttf'
+	@mkdir -p "$(ROOT_DIR)/vendor/cascadia"
+	curl -sfL https://github.com/microsoft/cascadia-code/releases/download/$(CASCADIA_CODE_VERSION)/Cascadia.ttf  --output "$(ROOT_DIR)/vendor/cascadia/Cascadia.ttf"
+	curl -sfL https://github.com/microsoft/cascadia-code/releases/download/$(CASCADIA_CODE_VERSION)/CascadiaMono.ttf  --output "$(ROOT_DIR)/vendor/cascadia/CascadiaMono.ttf"
 
 	@echo -e "\033[1;34m‣ Download source glyphs...\033[0m"
-	@mkdir -p src/glyphs
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/devicons.ttf?raw=true --output src/glyphs/devicons.ttf
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/font-awesome-extension.ttf?raw=true --output src/glyphs/font-awesome-extension.ttf
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/font-sLogos.ttf?raw=true --output src/glyphs/font-sLogos.ttf
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/FontAwesome.otf?raw=true --output src/glyphs/FontAwesome.otf
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/materialdesignicons-webfont.ttf?raw=true --output src/glyphs/materialdesignicons-webfont.ttf
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/octicons.ttf?raw=true --output src/glyphs/octicons.ttf
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/original-source.otf?raw=true --output src/glyphs/original-source.otf
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Pomicons.otf?raw=true --output src/glyphs/Pomicons.otf
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/PowerlineExtraSymbols.otf?raw=true --output src/glyphs/PowerlineExtraSymbols.otf
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/PowerlineSymbols.otf?raw=true --output src/glyphs/PowerlineSymbols.otf
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols-1000-em%20Nerd%20Font%20Complete.ttf?raw=true --output "src/glyphs/Symbols-1000-em Nerd Font Complete.ttf"
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols-2048-em%20Nerd%20Font%20Complete.ttf?raw=true --output "src/glyphs/Symbols-2048-em Nerd Font Complete.ttf"
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols%20Template%201000%20em.ttf?raw=true --output "src/glyphs/Symbols Template 1000 em.ttf"
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols%20Template%202048%20em.ttf?raw=true --output "src/glyphs/Symbols Template 2048 em.ttf"
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Unicode_IEC_symbol_font.otf?raw=true --output src/glyphs//Unicode_IEC_symbol_font.otf
-	@curl -sL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/weathericons-regular-webfont.ttf?raw=true --output src/glyphs/weathericons-regular-webfont.ttf
-	@curl -sL https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/src/glyphs/NerdFontsSymbols%201000%20EM%20Nerd%20Font%20Complete%20Blank.sfd --output "src/glyphs/NerdFontsSymbols 1000 EM Nerd Font Complete Blank.sfd"
-	@curl -sL https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/src/glyphs/NerdFontsSymbols%202048%20EM%20Nerd%20Font%20Complete%20Blank.sfd --output "src/glyphs/NerdFontsSymbols 2048 EM Nerd Font Complete Blank.sfd"
+	@mkdir -p "$(ROOT_DIR)/vendor/src/glyphs"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/devicons.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/devicons.ttf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/font-awesome-extension.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/font-awesome-extension.ttf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/font-logos.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/font-logos.ttf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/FontAwesome.otf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/FontAwesome.otf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/materialdesignicons-webfont.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/materialdesignicons-webfont.ttf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/octicons.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/octicons.ttf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/original-source.otf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/original-source.otf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Pomicons.otf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/Pomicons.otf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/PowerlineExtraSymbols.otf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/PowerlineExtraSymbols.otf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/PowerlineSymbols.otf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/PowerlineSymbols.otf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols-1000-em%20Nerd%20Font%20Complete.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/Symbols-1000-em Nerd Font Complete.ttf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols-2048-em%20Nerd%20Font%20Complete.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/Symbols-2048-em Nerd Font Complete.ttf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols%20Template%201000%20em.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/Symbols Template 1000 em.ttf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols%20Template%202048%20em.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/Symbols Template 2048 em.ttf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Unicode_IEC_symbol_font.otf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs//Unicode_IEC_symbol_font.otf"
+	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/weathericons-regular-webfont.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/weathericons-regular-webfont.ttf"
+	curl -sfL https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/src/glyphs/NerdFontsSymbols%201000%20EM%20Nerd%20Font%20Complete%20Blank.sfd --output "$(ROOT_DIR)/vendor/src/glyphs/NerdFontsSymbols 1000 EM Nerd Font Complete Blank.sfd"
+	curl -sfL https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/src/glyphs/NerdFontsSymbols%202048%20EM%20Nerd%20Font%20Complete%20Blank.sfd --output "$(ROOT_DIR)/vendor/src/glyphs/NerdFontsSymbols 2048 EM Nerd Font Complete Blank.sfd"
 
 	@echo -e "\033[1;34m‣ Download patcher...\033[0m"
-	@mkdir -p src/patcher
-	@curl -sL https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/font-patcher --output 'src/patcher/font-patcher'
+	curl -sfL https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/font-patcher --output "$(ROOT_DIR)/vendor/font-patcher"
 
-	@mkdir -p src/meta
-	@touch src/meta/.prepared
+	@touch "$(ROOT_DIR)/vendor/.prepared"
 
 .PHONY: clean
 clean: ## Clean build artifacts
 	@echo -e "\033[1;92m➜ $@ \033[0m"
-	@echo -e "\033[1;34m‣ Removing generated fonts...\033[0m"
-	@rm -f build/*.* build/*
-	@echo -e "\033[1;34m‣ Removing downloaded files...\033[0m"
-	@rm -rf src
+	rm -rf $(ROOT_DIR)/{vendor,build}
+	rm -rf $(ROOT_DIR)/*.ttf
