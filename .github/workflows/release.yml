@@ -15,19 +15,27 @@ jobs:
         sudo -H pip install configparser
     - name: Prepare
       run: make prepare
-    - name: Build Patched fonts
-      run: make fonts
+
+    - name: Build Patched fonts [Cascadia]
+      run: make cascadia
+    - name: Build Patched fonts [Jetbrains Mono]
+      run: make jetbrains-mono
+
     - name: Generate checksums
       run: |
+        make release-notes
         cd build
-        sha256sum StarshipCode-Regular-NerdFont.ttf > SHA256SUMS
-        sha256sum StarshipCode-Mono-NerdFont.ttf >> SHA256SUMS
+        sha256sum *.ttf > SHA256SUMS
     # Because github action's way of referencing commits and tags sucks
     - name: Get the version
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-    # create arelease on tag
+    - name: Get the release notes
+      id: get_release_notes
+      run: echo ::set-output name=REL_NOTES::$(cat build/release-notes)
+
+    # create a release on tag
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1.0.0
@@ -36,29 +44,74 @@ jobs:
       with:
         tag_name: ${{ steps.get_version.outputs.VERSION }}
         release_name: Release ${{ steps.get_version.outputs.VERSION }}
+        body: ${{ steps.get_release_notes.outputs.REL_NOTES }}
         draft: false
         prerelease: false
 
     # Upload Release assets
-    - name: Upload Regular Font
+    - name: Upload Regular Font [Cascadia-Cascade]
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/StarshipCode-Regular-NerdFont.ttf
-        asset_name: StarshipCode-Regular-NerdFont.ttf
+        asset_path: build/StarshipCascade-Regular-NerdFont.ttf
+        asset_name: StarshipCascade-Regular-NerdFont.ttf
         asset_content_type: font/ttf
-    - name: Upload Mono Font
+
+    - name: Upload Mono Font [Cascadia-Cascade]
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/StarshipCode-Mono-NerdFont.ttf
-        asset_name: StarshipCode-Mono-NerdFont.ttf
+        asset_path: build/StarshipCascade-Mono-NerdFont.ttf
+        asset_name: StarshipCascade-Mono-NerdFont.ttf
         asset_content_type: font/ttf
+
+    - name: Upload Regular Font [Cascadia-Cascade-Windows]
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/StarshipCascade-Regular-NerdFont-Windows.ttf
+        asset_name: StarshipCascade-Regular-NerdFont-Windows.ttf
+        asset_content_type: font/ttf
+
+    - name: Upload Mono Font [Cascadia-Cascade-Windows]
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/StarshipCascade-Mono-NerdFont-Windows.ttf
+        asset_name: StarshipCascade-Mono-NerdFont-Windows.ttf
+        asset_content_type: font/ttf
+
+    - name: Upload Regular Font [JetBrainsMono-Jet]
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/StarshipJet-Regular-NerdFont.ttf
+        asset_name: StarshipJet-Regular-NerdFont.ttf
+        asset_content_type: font/ttf
+
+    - name: Upload Mono Font [JetBrainsMono-Jet-Windows]
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/StarshipJet-Regular-NerdFont-Windows.ttf
+        asset_name: StarshipJet-Regular-NerdFont-Windows.ttf
+        asset_content_type: font/ttf
+
     - name: Upload Checksums
       uses: actions/upload-release-asset@v1.0.1
       env:

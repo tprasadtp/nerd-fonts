@@ -26,22 +26,53 @@ jobs:
         sudo -H pip install configparser
     - name: Prepare
       run: make prepare
-    - name: Build Patched fonts
-      run: make fonts
+    - name: Build Patched fonts [Cascadia]
+      run: make cascadia
+    - name: Build Patched fonts [Jetbrains Mono]
+      run: make jetbrains-mono
+
+    # checksums
     - name: Generate checksums
       run: |
         cd build
-        sha256sum StarshipCode-Regular-NerdFont.ttf > SHA256SUMS
-        sha256sum StarshipCode-Mono-NerdFont.ttf >> SHA256SUMS
-    - uses: actions/upload-artifact@v1
+        sha256sum *.ttf > SHA256SUMS
+
+    # Upload StarshipCascade
+    - name: Upload StarshipCascade-Regular-NerdFont
+      uses: actions/upload-artifact@v1
       with:
-        name: StarshipCode-Mono-NerdFont
-        path: build/StarshipCode-Mono-NerdFont.ttf
-    - uses: actions/upload-artifact@v1
+        name:  StarshipCascade-Regular-NerdFont
+        path: build/StarshipCascade-Regular-NerdFont.ttf
+    - name: Upload StarshipCascade-Mono-NerdFont
+      uses: actions/upload-artifact@v1
       with:
-        name: StarshipCode-Regular-NerdFont
-        path: build/StarshipCode-Regular-NerdFont.ttf
-    - uses: actions/upload-artifact@v1
+        name: StarshipCascade-Mono-NerdFont
+        path: build/StarshipCascade-Mono-NerdFont.ttf
+    # Windows versions
+    - name: Upload StarshipCascade-Regular-NerdFont-Windows
+      uses: actions/upload-artifact@v1
+      with:
+        name:  StarshipCascade-Regular-NerdFont-Windows
+        path: build/StarshipCascade-Regular-NerdFont-Windows.ttf
+    - name: Upload StarshipCascade-Mono-NerdFont-Windows
+      uses: actions/upload-artifact@v1
+      with:
+        name: StarshipCascade-Mono-NerdFont-Windows
+        path: build/StarshipCascade-Mono-NerdFont-Windows.ttf
+
+    # Upload starshipJet
+    - name: Upload StarshipJet-Regular-NerdFont
+      uses: actions/upload-artifact@v1
+      with:
+        name:  StarshipJet-Regular-NerdFont
+        path: build/StarshipJet-Regular-NerdFont.ttf
+    - name: StarshipJet-Regular-NerdFont-Windows
+      uses: actions/upload-artifact@v1
+      with:
+        name: StarshipJet-Regular-NerdFont-Windows
+        path: build/StarshipJet-Regular-NerdFont-Windows.ttf
+    - name: Upload checksums
+      uses: actions/upload-artifact@v1
       with:
         name: SHA256SUMS
         path: build/SHA256SUMS
