@@ -2,10 +2,9 @@
 
 [![build](https://github.com/tprasadtp/starship-fonts/workflows/build/badge.svg)](https://github.com/tprasadtp/starship-fonts/actions)
 [![release](https://github.com/tprasadtp/starship-fonts/workflows/release/badge.svg)](https://github.com/tprasadtp/starship-fonts/actions)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/tprasadtp/starship-fonts)
-
 ![cascadia](https://img.shields.io/badge/cascadia--code-v1911.21-brightgreen?labelColor=313131)
 ![jetbrains](https://img.shields.io/badge/jetbrains--mono-v1.0-brightgreen?labelColor=313131)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/tprasadtp/starship-fonts)
 
 ## License
 
