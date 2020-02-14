@@ -36,6 +36,7 @@ jobs:
       run: |
         cd build
         sha256sum *.ttf > SHA256SUMS
+        cat SHA256SUMS
 
     # Upload StarshipCascade
     - name: Upload StarshipCascade-Regular-NerdFont
