@@ -30,7 +30,7 @@ cascadia: ## Make Starship Cascade from Cascadia Code
 	@mkdir -p "$(ROOT_DIR)/build"
 	@if [ -f $(ROOT_DIR)/vendor/.prepared ]; then \
 	echo -e "\033[1;34m‣ StarshipCode\033[0m"; \
-	fontforge --script "$(ROOT_DIR)/vendor/font-patcher" -l --quiet --complete --no-progressbars "$(ROOT_DIR)/fonts/Cascadia/Cascadia.ttf"; \
+	fontforge --script "$(ROOT_DIR)/vendor/font-patcher" -l --quiet --complete --no-progressbars "$(ROOT_DIR)/fonts/Cascadia/CascadiaCode.ttf"; \
 	echo " # Renaming Font..."; \
 	fontforge -quiet --script "$(ROOT_DIR)/scripts/rename-font" --input "$(ROOT_DIR)/Cascadia Code Regular Nerd Font Complete.ttf" \
                                  --output "$(ROOT_DIR)/build/StarshipCascade-Regular-NerdFont.ttf" \
@@ -47,7 +47,7 @@ cascadia: ## Make Starship Cascade from Cascadia Code
                                  --version "$(CASCADIA_CODE_VERSION)-$(STARSHIP_FONT_VERSION)"; \
 	echo "*******************************************"; \
 	echo -e "\033[1;34m‣ StarshipCode[windows]\033[0m"; \
-	fontforge -quiet --script "$(ROOT_DIR)/vendor/font-patcher" -l --windows --quiet --complete --no-progressbars "$(ROOT_DIR)/fonts/Cascadia/Cascadia.ttf"; \
+	fontforge -quiet --script "$(ROOT_DIR)/vendor/font-patcher" -l --windows --quiet --complete --no-progressbars "$(ROOT_DIR)/fonts/Cascadia/CascadiaCode.ttf"; \
 	echo " # Renaming Font..."; \
 	fontforge --script "$(ROOT_DIR)/scripts/rename-font" --input "$(ROOT_DIR)/Cascadia Code Regular Nerd Font Complete Windows Compatible.ttf" \
                                  --output "$(ROOT_DIR)/build/StarshipCascade-Regular-NerdFont-Windows.ttf" \
