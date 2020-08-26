@@ -26,34 +26,37 @@ jobs:
         sudo -H pip install configparser
     - name: Prepare
       run: make prepare
-    - name: Build Patched fonts [Cascadia]
+    - name: Build Patched fonts
       run: make cascadia
+    - name: Build Patched fonts [Windows]
+      run: make cascadia-win
 
     # checksums
     - name: Generate checksums
       run: |
         cd build
         sha256sum *.ttf > SHA256SUMS
+        make release-notes
 
-    # Upload StarshipCascade
-    - name: Upload StarshipCascade-Regular-NerdFont
+    # Upload StarshipCode
+    - name: Upload StarshipCode
       uses: actions/upload-artifact@v1
       with:
-        name:  StarshipCascade-Regular-NerdFont
-        path: build/StarshipCascade-Regular-NerdFont.ttf
-    - name: Upload StarshipCascade-Mono-NerdFont
+        name:  StarshipCode
+        path: build/StarshipCode.ttf
+    - name: Upload StarshipMono
       uses: actions/upload-artifact@v1
       with:
-        name: StarshipCascade-Mono-NerdFont
-        path: build/StarshipCascade-Mono-NerdFont.ttf
+        name: StarshipMono
+        path: build/StarshipMono.ttf
     # Windows versions
-    - name: Upload StarshipCascade-Regular-NerdFont-Windows
+    - name: Upload StarshipCode-Windows
       uses: actions/upload-artifact@v1
       with:
-        name:  StarshipCascade-Regular-NerdFont-Windows
-        path: build/StarshipCascade-Regular-NerdFont-Windows.ttf
-    - name: Upload StarshipCascade-Mono-NerdFont-Windows
+        name:  StarshipCode-Windows
+        path: build/StarshipCode-Windows.ttf
+    - name: Upload StarshipMono-Windows
       uses: actions/upload-artifact@v1
       with:
-        name: StarshipCascade-Mono-NerdFont-Windows
-        path: build/StarshipCascade-Mono-NerdFont-Windows.ttf
+        name: StarshipMono-Windows
+        path: build/StarshipMono-Windows.ttf

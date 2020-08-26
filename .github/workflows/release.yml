@@ -15,9 +15,10 @@ jobs:
         sudo -H pip install configparser
     - name: Prepare
       run: make prepare
-
-    - name: Build Patched fonts [Cascadia]
+    - name: Build Patched fonts
       run: make cascadia
+    - name: Build Patched fonts [Windows]
+      run: make cascadia-win
 
     - name: Generate checksums
       run: |
@@ -50,8 +51,8 @@ jobs:
       with:
         # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/StarshipCascade-Regular-NerdFont.ttf
-        asset_name: StarshipCascade-Regular-NerdFont.ttf
+        asset_path: build/StarshipCode.ttf
+        asset_name: StarshipCode.ttf
         asset_content_type: font/ttf
 
     - name: Upload Mono Font [Cascadia]
@@ -60,8 +61,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/StarshipCascade-Mono-NerdFont.ttf
-        asset_name: StarshipCascade-Mono-NerdFont.ttf
+        asset_path: build/StarshipMono.ttf
+        asset_name: StarshipMono.ttf
         asset_content_type: font/ttf
 
     - name: Upload Regular Font [Cascadia-Windows]
@@ -71,8 +72,8 @@ jobs:
       with:
         # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/StarshipCascade-Regular-NerdFont-Windows.ttf
-        asset_name: StarshipCascade-Regular-NerdFont-Windows.ttf
+        asset_path: build/StarshipCode-Windows.ttf
+        asset_name: StarshipCode-Windows.ttf
         asset_content_type: font/ttf
 
     - name: Upload Mono Font [Cascadia-Windows]
@@ -81,8 +82,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/StarshipCascade-Mono-NerdFont-Windows.ttf
-        asset_name: StarshipCascade-Mono-NerdFont-Windows.ttf
+        asset_path: build/StarshipMono-Windows.ttf
+        asset_name: StarshipMono-Windows.ttf
         asset_content_type: font/ttf
 
     - name: Upload Checksums
