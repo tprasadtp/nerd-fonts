@@ -34,9 +34,9 @@ jobs:
     # checksums
     - name: Generate checksums
       run: |
+        make release-notes
         cd build
         sha256sum *.ttf > SHA256SUMS
-        make release-notes
 
     # Upload StarshipCode
     - name: Upload StarshipCode
