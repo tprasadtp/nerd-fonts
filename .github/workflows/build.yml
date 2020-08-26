@@ -28,8 +28,6 @@ jobs:
       run: make prepare
     - name: Build Patched fonts [Cascadia]
       run: make cascadia
-    - name: Build Patched fonts [Jetbrains Mono]
-      run: make jetbrains-mono
 
     # checksums
     - name: Generate checksums
@@ -59,20 +57,3 @@ jobs:
       with:
         name: StarshipCascade-Mono-NerdFont-Windows
         path: build/StarshipCascade-Mono-NerdFont-Windows.ttf
-
-    # Upload starshipJet
-    - name: Upload StarshipJet-Regular-NerdFont
-      uses: actions/upload-artifact@v1
-      with:
-        name:  StarshipJet-Regular-NerdFont
-        path: build/StarshipJet-Regular-NerdFont.ttf
-    - name: StarshipJet-Regular-NerdFont-Windows
-      uses: actions/upload-artifact@v1
-      with:
-        name: StarshipJet-Regular-NerdFont-Windows
-        path: build/StarshipJet-Regular-NerdFont-Windows.ttf
-    - name: Upload checksums
-      uses: actions/upload-artifact@v1
-      with:
-        name: SHA256SUMS
-        path: build/SHA256SUMS
