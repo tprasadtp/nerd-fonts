@@ -1,9 +1,7 @@
 SHELL := /bin/bash
 
-STARSHIP_FONT_VERSION := NF
-
-CASCADIA_CODE_VERSION ?= 2007.01
-
+GITHUB_RUN_NUMBER ?= debug
+CASCADIA_CODE_VERSION ?= 1911.21
 ROOT_DIR := $(strip $(patsubst %/, %, $(dir $(realpath $(firstword $(MAKEFILE_LIST))))))
 
 .PHONY: help
@@ -29,14 +27,14 @@ cascadia: ## Make Starship Cascade from Cascadia Code
 	@echo -e "\033[1;92m➜ $@ \033[0m"
 	@mkdir -p "$(ROOT_DIR)/build"
 	@if [ -f $(ROOT_DIR)/vendor/.prepared ]; then \
-	echo -e "\033[1;34m‣ StarshipCode\033[0m"; \
+	echo -e "\033[1;34m‣ StarshipCode Build - $(GITHUB_RUN_NUMBER)\033[0m"; \
 	fontforge --script "$(ROOT_DIR)/vendor/font-patcher" -l --quiet --complete --no-progressbars "$(ROOT_DIR)/fonts/Cascadia/CascadiaCode.ttf"; \
 	echo " # Renaming Font..."; \
 	fontforge -quiet --script "$(ROOT_DIR)/scripts/rename-font" --input "$(ROOT_DIR)/Cascadia Code Regular Nerd Font Complete.ttf" \
                                  --output "$(ROOT_DIR)/build/StarshipCascade-Regular-NerdFont.ttf" \
                                  --name "StarshipCascade" \
 								 --type "Regular" \
-                                 --version "$(CASCADIA_CODE_VERSION)-$(STARSHIP_FONT_VERSION)"; \
+                                 --version "$(CASCADIA_CODE_VERSION)-$(GITHUB_RUN_NUMBER)"; \
 	echo -e "\033[1;34m‣ StarshipCodeMono\033[0m"; \
 	fontforge --script "$(ROOT_DIR)/vendor/font-patcher" -l --quiet --complete --no-progressbars "$(ROOT_DIR)/vendor/Cascadia/CascadiaMono.ttf"; \
 	echo " # Renaming Font..."; \
@@ -44,16 +42,16 @@ cascadia: ## Make Starship Cascade from Cascadia Code
                                  --output "$(ROOT_DIR)/build/StarshipCascade-Mono-NerdFont.ttf" \
                                  --name "StarshipCascade" \
 								 --type "Mono" \
-                                 --version "$(CASCADIA_CODE_VERSION)-$(STARSHIP_FONT_VERSION)"; \
+                                 --version "$(CASCADIA_CODE_VERSION)-$(GITHUB_RUN_NUMBER)"; \
 	echo "*******************************************"; \
-	echo -e "\033[1;34m‣ StarshipCode[windows]\033[0m"; \
+	echo -e "\033[1;34m‣ StarshipCode Build - $(GITHUB_RUN_NUMBER) [windows]\033[0m"; \
 	fontforge -quiet --script "$(ROOT_DIR)/vendor/font-patcher" -l --windows --quiet --complete --no-progressbars "$(ROOT_DIR)/fonts/Cascadia/CascadiaCode.ttf"; \
 	echo " # Renaming Font..."; \
 	fontforge --script "$(ROOT_DIR)/scripts/rename-font" --input "$(ROOT_DIR)/Cascadia Code Regular Nerd Font Complete Windows Compatible.ttf" \
                                  --output "$(ROOT_DIR)/build/StarshipCascade-Regular-NerdFont-Windows.ttf" \
                                  --name "StarshipCode" \
 								 --type "Regular" \
-                                 --version "$(CASCADIA_CODE_VERSION)-$(STARSHIP_FONT_VERSION)"; \
+                                 --version "$(CASCADIA_CODE_VERSION)-$(GITHUB_RUN_NUMBER)"; \
 	echo -e "\033[1;34m‣ StarshipCodeMono[windows]\033[0m"; \
 	fontforge -quiet --script "$(ROOT_DIR)/vendor/font-patcher" -l --quiet --windows --complete --no-progressbars "$(ROOT_DIR)/vendor/Cascadia/CascadiaMono.ttf"; \
 	echo " # Renaming Font..."; \
@@ -61,7 +59,7 @@ cascadia: ## Make Starship Cascade from Cascadia Code
                                  --output "$(ROOT_DIR)/build/StarshipCascade-Mono-NerdFont-Windows.ttf" \
                                  --name "StarshipCode" \
 								 --type "Mono" \
-                                 --version "$(CASCADIA_CODE_VERSION)-$(STARSHIP_FONT_VERSION)"; \
+                                 --version "$(CASCADIA_CODE_VERSION)-$(GITHUB_RUN_NUMBER)"; \
 	else \
 		echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
 		exit 1; \
@@ -113,4 +111,4 @@ release-notes: ## Prepare release notes
 	@echo "| Type | Version |" >> $(ROOT_DIR)/build/release-notes.md
 	@echo "|---|---|" >> $(ROOT_DIR)/build/release-notes.md
 	@echo "| Upstream Version | ![cascadia](https://img.shields.io/badge/upstream-v$(CASCADIA_CODE_VERSION)-blue?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
-	@echo "| Starship Version | ![starship](https://img.shields.io/badge/starship--code-$(CASCADIA_CODE_VERSION)--$(STARSHIP_FONT_VERSION)-brightgreen?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
+	@echo "| Starship Version | ![starship](https://img.shields.io/badge/starship--code-$(CASCADIA_CODE_VERSION)--$(GITHUB_RUN_NUMBER)-brightgreen?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
