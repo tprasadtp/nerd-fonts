@@ -88,14 +88,14 @@ prepare: ## Download external assets required
 
 	@echo -e "\033[1;34m‣ Download Upstream [Cascadia Code]\033[0m"
 	@mkdir -p vendor/fonts/Cascadia
-	#curl -sfL https://github.com/microsoft/cascadia-code/releases/download/v$(CASCADIA_CODE_VERSION)/CascadiaCode-$(CASCADIA_CODE_VERSION).zip --output $(ROOT_DIR)/vendor/fonts/Cascadia/CascadiaCode.zip
+	curl -sfL https://github.com/microsoft/cascadia-code/releases/download/v$(CASCADIA_CODE_VERSION)/CascadiaCode-$(CASCADIA_CODE_VERSION).zip --output $(ROOT_DIR)/vendor/fonts/Cascadia/CascadiaCode.zip
 	@echo -e "\033[1;34m‣ Uncompress Cascadia Code\033[0m"
 	unzip -d $(ROOT_DIR)/vendor/fonts/Cascadia $(ROOT_DIR)/vendor/fonts/Cascadia/CascadiaCode.zip
 
-	# @echo -e "\033[1;34m‣ Open and close font files because FF is buggy\033[0m"
-	# @mkdir -p $(ROOT_DIR)/build/source-fonts
-	# @fontforge --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaCode.ttf   --output $(ROOT_DIR)/build/source-fonts/CascadiaCode.ttf
-	# @fontforge --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaMono.ttf --output $(ROOT_DIR)/build/source-fonts/CascadiaMono.ttf
+	@echo -e "\033[1;34m‣ Open and close font files because FF is buggy\033[0m"
+	@mkdir -p $(ROOT_DIR)/build/source-fonts
+	@fontforge --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaCode.ttf   --output $(ROOT_DIR)/build/source-fonts/CascadiaCode.ttf
+	@fontforge --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaMono.ttf --output $(ROOT_DIR)/build/source-fonts/CascadiaMono.ttf
 
 	@echo -e "\033[1;34m‣ Download Font Patcher\033[0m"
 	curl -sfL https://raw.githubusercontent.com/ryanoasis/nerd-fonts/$(NERDFONT_VERSION)/font-patcher --output "$(ROOT_DIR)/vendor/font-patcher"
