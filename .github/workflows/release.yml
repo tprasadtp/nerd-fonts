@@ -89,7 +89,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: build/Cascadia/Caskaydia Mono Nerd Font Complete.ttf
-        asset_name: Caskaydia Cove Nerd Font Complete.ttf
+        asset_name: Caskaydia Mono Nerd Font Complete.ttf
         asset_content_type: font/ttf
 
     - name: Cascadia Mono Windows
@@ -99,7 +99,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: build/Cascadia/Caskaydia Mono Nerd Font Complete Windows Compatible.ttf
-        asset_name: Caskaydia Cove Nerd Font Complete Windows Compatible.ttf
+        asset_name: Caskaydia Mono Nerd Font Complete Windows Compatible.ttf
         asset_content_type: font/ttf
 
     # Fantasque
