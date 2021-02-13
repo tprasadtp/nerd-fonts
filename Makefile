@@ -3,8 +3,10 @@ SHELL := /bin/bash
 GITHUB_RUN_NUMBER ?= NA
 
 NERDFONT_VERSION := a192bff
-CASCADIA_CODE_VERSION := 2008.25
-STARSHIP_VERSION := 2008.25
+CASCADIA_CODE_VERSION := 2102.03
+FANTASQUE_VERSION := v1.8.0
+VERSION := 0.5.0
+
 
 ROOT_DIR := $(strip $(patsubst %/, %, $(dir $(realpath $(firstword $(MAKEFILE_LIST))))))
 
@@ -26,58 +28,109 @@ help: ## This help dialog.
         printf "%s\n" $$help_info; \
     done
 
+.PHONY: all
+all: cascadia cascadia-mono cascadia-win cascadia-mono-win fantasque fantasque-win
+
 .PHONY: cascadia
-cascadia: ## Make Starship Cascade from Cascadia Code
+cascadia: ## Patch CascadiaCode Regular
 	@echo -e "\033[1;92m➜ $@ \033[0m"
 	@mkdir -p "$(ROOT_DIR)/build"
 	@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
-	echo -e "\033[1;34m‣ StarshipCode Build - Regular - $(GITHUB_RUN_NUMBER)\033[0m"; \
-	fontforge --script "$(ROOT_DIR)/vendor/font-patcher" -l --quiet --complete --no-progressbars "$(ROOT_DIR)/build/source-fonts/CascadiaCode.ttf"; \
-	echo " # Renaming Font..."; \
-	fontforge -quiet --script "$(ROOT_DIR)/scripts/rename-font" --input "$(ROOT_DIR)/Cascadia Code Regular Nerd Font Complete.ttf" \
-                                 --output "$(ROOT_DIR)/build/StarshipCode.ttf" \
-                                 --name "StarshipCode" \
-								 --type "Regular" \
-                                 --version "$(STARSHIP_VERSION)-GH$(GITHUB_RUN_NUMBER)"; \
-	echo -e "\033[1;34m‣ StarshipMono Build - Mono - $(GITHUB_RUN_NUMBER)\033[0m"; \
-	fontforge --script "$(ROOT_DIR)/vendor/font-patcher" -l --quiet --complete --no-progressbars "$(ROOT_DIR)/build/source-fonts/CascadiaMono.ttf"; \
-	echo " # Renaming Font..."; \
-	fontforge -quiet --script "$(ROOT_DIR)/scripts/rename-font" --input "$(ROOT_DIR)/Cascadia Mono Regular Nerd Font Complete.ttf" \
-                                 --output "$(ROOT_DIR)/build/StarshipMono.ttf" \
-                                 --name "StarshipMono" \
-								 --type "Mono" \
-                                 --version "$(STARSHIP_VERSION)-GH$(GITHUB_RUN_NUMBER)"; \
+	echo -e "\033[1;34m‣ CascadiaCode Build - Regular - $(GITHUB_RUN_NUMBER)\033[0m"; \
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Cascadia" \
+		"${ROOT_DIR}/build/source-fonts/CascadiaCode.ttf"; \
 	else \
 		echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
 		exit 1; \
 	fi
 
+.PHONY: cascadia-mono
+cascadia-mono: ## Patch CascadiaCode mono font
+		@echo -e "\033[1;92m➜ $@ \033[0m"
+		@mkdir -p "$(ROOT_DIR)/build"
+		@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
+		echo -e "\033[1;34m‣ CascadiaCode Build - Regular - $(GITHUB_RUN_NUMBER)\033[0m"; \
+		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+			--complete \
+			--no-progressbars \
+			--outputdir "${ROOT_DIR}/build/Cascadia" \
+			"${ROOT_DIR}/build/source-fonts/CascadiaMono.ttf"; \
+		else \
+			echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
+			exit 1; \
+		fi
+
+.PHONY: fantasque
+fantasque: ## Patch FantasqueSansMono
+	@echo -e "\033[1;92m➜ $@ \033[0m"
+	@mkdir -p "$(ROOT_DIR)/build"
+	@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
+		echo -e "\033[1;34m‣ FantasqueSansMono \033[0m"; \
+		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+			--complete \
+			--no-progressbars \
+			--outputdir "${ROOT_DIR}/build/Fantasque" \
+ 		"${ROOT_DIR}/vendor/fonts/Fantasque/TTF/FantasqueSansMono-Regular.ttf"; \
+		else \
+			echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
+			exit 1; \
+		fi
+
+# windows
 
 .PHONY: cascadia-win
-cascadia-win: ## Make Starship Cascade from Cascadia Code for Windows
+cascadia-win: ## Patch CascadiaCode Regular (windows)
 	@echo -e "\033[1;92m➜ $@ \033[0m"
 	@mkdir -p "$(ROOT_DIR)/build"
 	@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
-	echo -e "\033[1;34m‣ StarshipCode Windows Build - Regular - $(GITHUB_RUN_NUMBER)\033[0m"; \
-	fontforge -quiet --script "$(ROOT_DIR)/vendor/font-patcher" -l --windows --quiet --complete --no-progressbars "$(ROOT_DIR)/build/source-fonts/CascadiaCode.ttf"; \
-	echo " # Renaming Font..."; \
-	fontforge --script "$(ROOT_DIR)/scripts/rename-font" --input "$(ROOT_DIR)/Cascadia Code Regular Nerd Font Complete Windows Compatible.ttf" \
-                                 --output "$(ROOT_DIR)/build/StarshipCode-Windows.ttf" \
-                                 --name "StarshipCode" \
-								 --type "Regular" \
-                                 --version "$(STARSHIP_VERSION)-GH$(GITHUB_RUN_NUMBER)"; \
-	echo -e "\033[1;34m‣ StarshipCode Windows Build - Mono - $(GITHUB_RUN_NUMBER)\033[0m"; \
-	fontforge -quiet --script "$(ROOT_DIR)/vendor/font-patcher" -l --quiet --windows --complete --no-progressbars "$(ROOT_DIR)/build/source-fonts/CascadiaMono.ttf"; \
-	echo " # Renaming Font..."; \
-	fontforge -quiet --script "$(ROOT_DIR)/scripts/rename-font" --input "$(ROOT_DIR)/Cascadia Mono Regular Nerd Font Complete Windows Compatible.ttf" \
-                                 --output "$(ROOT_DIR)/build/StarshipMono-Windows.ttf" \
-                                 --name "StarshipCode" \
-								 --type "Mono" \
-                                 --version "$(STARSHIP_VERSION)-GH$(GITHUB_RUN_NUMBER)"; \
+	echo -e "\033[1;34m‣ CascadiaCode Build - Regular - $(GITHUB_RUN_NUMBER)\033[0m"; \
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--windows \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Cascadia" \
+		"${ROOT_DIR}/build/source-fonts/CascadiaCode.ttf"; \
 	else \
 		echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
 		exit 1; \
 	fi
+
+.PHONY: cascadia-mono-win
+cascadia-mono-win: ## Patch CascadiaCode mono font (windows)
+		@echo -e "\033[1;92m➜ $@ \033[0m"
+		@mkdir -p "$(ROOT_DIR)/build"
+		@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
+		echo -e "\033[1;34m‣ CascadiaCode Build - Regular - $(GITHUB_RUN_NUMBER)\033[0m"; \
+		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+			--complete \
+			--windows \
+			--no-progressbars \
+			--outputdir "${ROOT_DIR}/build/Cascadia" \
+			"${ROOT_DIR}/build/source-fonts/CascadiaMono.ttf"; \
+		else \
+			echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
+			exit 1; \
+		fi
+
+.PHONY: fantasque-win
+fantasque-win: ## Patch FantasqueSansMono (windows)
+	@echo -e "\033[1;92m➜ $@ \033[0m"
+	@mkdir -p "$(ROOT_DIR)/build"
+	@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
+		echo -e "\033[1;34m‣ FantasqueSansMono \033[0m"; \
+		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+			--complete \
+			--windows \
+			--no-progressbars \
+			--outputdir "${ROOT_DIR}/build/Fantasque" \
+ 		"${ROOT_DIR}/vendor/fonts/Fantasque/TTF/FantasqueSansMono-Regular.ttf"; \
+		else \
+			echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
+			exit 1; \
+		fi
 
 
 
@@ -88,40 +141,27 @@ prepare: ## Download external assets required
 
 	@echo -e "\033[1;34m‣ Download Upstream [Cascadia Code]\033[0m"
 	@mkdir -p vendor/fonts/Cascadia
-	curl -sfL https://github.com/microsoft/cascadia-code/releases/download/v$(CASCADIA_CODE_VERSION)/CascadiaCode-$(CASCADIA_CODE_VERSION).zip --output $(ROOT_DIR)/vendor/fonts/Cascadia/CascadiaCode.zip
+	@curl -sSfL https://github.com/microsoft/cascadia-code/releases/download/v$(CASCADIA_CODE_VERSION)/CascadiaCode-$(CASCADIA_CODE_VERSION).zip --output $(ROOT_DIR)/vendor/fonts/CascadiaCode.zip
 	@echo -e "\033[1;34m‣ Uncompress Cascadia Code\033[0m"
-	unzip -d $(ROOT_DIR)/vendor/fonts/Cascadia $(ROOT_DIR)/vendor/fonts/Cascadia/CascadiaCode.zip
+	@unzip -d $(ROOT_DIR)/vendor/fonts/Cascadia $(ROOT_DIR)/vendor/fonts/CascadiaCode.zip
 
 	@echo -e "\033[1;34m‣ Open and close font files because FF is buggy\033[0m"
 	@mkdir -p $(ROOT_DIR)/build/source-fonts
-	@fontforge --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaCode.ttf   --output $(ROOT_DIR)/build/source-fonts/CascadiaCode.ttf
-	@fontforge --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaMono.ttf --output $(ROOT_DIR)/build/source-fonts/CascadiaMono.ttf
+	@fontforge -quiet --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaCode.ttf   --output $(ROOT_DIR)/build/source-fonts/CascadiaCode.ttf
+	@fontforge -quiet --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaMono.ttf --output $(ROOT_DIR)/build/source-fonts/CascadiaMono.ttf
 
-	@echo -e "\033[1;34m‣ Download Font Patcher\033[0m"
-	curl -sfL https://raw.githubusercontent.com/ryanoasis/nerd-fonts/$(NERDFONT_VERSION)/font-patcher --output "$(ROOT_DIR)/vendor/font-patcher"
 
-	@echo -e "\033[1;34m‣ Download source glyphs...\033[0m"
-	@mkdir -p "$(ROOT_DIR)/vendor/src/glyphs"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/devicons.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/devicons.ttf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/font-awesome-extension.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/font-awesome-extension.ttf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/font-logos.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/font-logos.ttf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/FontAwesome.otf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/FontAwesome.otf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/materialdesignicons-webfont.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/materialdesignicons-webfont.ttf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/octicons.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/octicons.ttf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/original-source.otf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/original-source.otf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Pomicons.otf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/Pomicons.otf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/PowerlineExtraSymbols.otf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/PowerlineExtraSymbols.otf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/PowerlineSymbols.otf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/PowerlineSymbols.otf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols-1000-em%20Nerd%20Font%20Complete.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/Symbols-1000-em Nerd Font Complete.ttf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols-2048-em%20Nerd%20Font%20Complete.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/Symbols-2048-em Nerd Font Complete.ttf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols%20Template%201000%20em.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/Symbols Template 1000 em.ttf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols%20Template%202048%20em.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/Symbols Template 2048 em.ttf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Unicode_IEC_symbol_font.otf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs//Unicode_IEC_symbol_font.otf"
-	curl -sfL https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/weathericons-regular-webfont.ttf?raw=true --output "$(ROOT_DIR)/vendor/src/glyphs/weathericons-regular-webfont.ttf"
-	curl -sfL https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/src/glyphs/NerdFontsSymbols%201000%20EM%20Nerd%20Font%20Complete%20Blank.sfd --output "$(ROOT_DIR)/vendor/src/glyphs/NerdFontsSymbols 1000 EM Nerd Font Complete Blank.sfd"
-	curl -sfL https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/src/glyphs/NerdFontsSymbols%202048%20EM%20Nerd%20Font%20Complete%20Blank.sfd --output "$(ROOT_DIR)/vendor/src/glyphs/NerdFontsSymbols 2048 EM Nerd Font Complete Blank.sfd"
+	@echo -e "\033[1;34m‣ Download Upstream [FantasqueSansMono]\033[0m"
+	@mkdir -p vendor/fonts/Fantasque
+	@curl -sSfL https://github.com/belluzj/fantasque-sans/releases/download/$(FANTASQUE_VERSION)/FantasqueSansMono-NoLoopK.tar.gz --output $(ROOT_DIR)/vendor/fonts/FantasqueSansMono.tar.gz
 
+	@echo -e "\033[1;34m‣ Uncompress\033[0m"
+	@tar -xvf $(ROOT_DIR)/vendor/fonts/FantasqueSansMono.tar.gz -C $(ROOT_DIR)/vendor/fonts/Fantasque/
+
+	@mkdir -p build
 	@touch "$(ROOT_DIR)/build/.prepared"
+
+
 
 .PHONY: clean
 clean: ## Clean build artifacts
@@ -129,14 +169,22 @@ clean: ## Clean build artifacts
 	rm -rf $(ROOT_DIR)/vendor
 	rm -rf $(ROOT_DIR)/build
 
+.PHONY: checksums
+checksums: ## Generate SHA256 checksums for artifacts
+	@echo -e "\033[1;92m➜ $@ \033[0m"
+	cd $(ROOT_DIR)/build/Cascadia && sha256sum  ./*.ttf >  ../SHA256SUMS
+	cd $(ROOT_DIR)/build/Fantasque && sha256sum ./*.ttf >>  ../SHA256SUMS
+
+
 .PHONY: release-notes
 release-notes: ## Prepare release notes
 	@echo -e "\033[1;92m➜ $@ \033[0m"
 	@mkdir -p $(ROOT_DIR)/build
 	@echo "# Release Notes" > $(ROOT_DIR)/build/release-notes.md
-	@echo "| Type | Version |" >> $(ROOT_DIR)/build/release-notes.md
-	@echo "|---|---|" >> $(ROOT_DIR)/build/release-notes.md
-	@echo "| [Cascadia](https://github.com/microsoft/cascadia-code/releases/tag/v$(CASCADIA_CODE_VERSION)) | ![cascadia](https://img.shields.io/badge/version-$(CASCADIA_CODE_VERSION)-blue?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
-	@echo "| Starship | ![starship](https://img.shields.io/badge/version-$(STARSHIP_VERSION)-brightgreen?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
+	@echo "| Name | Upstream Name | Version |" >> $(ROOT_DIR)/build/release-notes.md
+	@echo "|---|---|---|" >> $(ROOT_DIR)/build/release-notes.md
+	@echo "| Caskaydia Cove | [Cascadia Code](https://github.com/microsoft/cascadia-code) | ![cascadia](https://img.shields.io/badge/version-$(CASCADIA_CODE_VERSION)-blue?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
+	@echo "| Fantasque Sans Mono | [Fantasque Sans Mono](https://github.com/belluzj/fantasque-sans) | ![fantasque](https://img.shields.io/badge/version-$(FANTASQUE_VERSION)-brightgreen?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
 	@echo "" >> $(ROOT_DIR)/build/release-notes.md
-	@echo "> Generated by GitHub Build GH-$(GITHUB_RUN_NUMBER), using nerd font patcher [$(NERDFONT_VERSION)](https://github.com/ryanoasis/nerd-fonts/blob/$(NERDFONT_VERSION)/font-patcher)." >> $(ROOT_DIR)/build/release-notes.md
+	@echo "> - Icons sourced from https://simpleicons.com." >> $(ROOT_DIR)/build/release-notes.md
+	@echo "> - Generated by GitHub Build GH-$(GITHUB_RUN_NUMBER), using nerd fonts." >> $(ROOT_DIR)/build/release-notes.md

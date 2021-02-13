@@ -13,18 +13,35 @@ jobs:
         sudo add-apt-repository ppa:fontforge/fontforge -y -u
         sudo apt-get install -y fontforge python-pip
         sudo -H pip install configparser
+
     - name: Prepare
       run: make prepare
-    - name: Build Patched fonts
+
+    - name: Build Cascadia
       run: make cascadia
-    - name: Build Patched fonts [Windows]
+
+    - name: Build Cascadia [Windows]
       run: make cascadia-win
 
+    - name: Build Cascadia Mono
+      run: make cascadia-mono
+
+    - name: Build Cascadia Mono [Windows]
+      run: make cascadia-mono-win
+
+    - name: Build Fantasque-Sans-Mono
+      run: make fantasque
+
+    - name: Build Fantasque-Sans-Mono [Windows]
+      run: make fantasque-win
+
+    # checksums
     - name: Generate checksums
       run: |
         make release-notes
-        cd build
-        sha256sum *.ttf > SHA256SUMS
+        make checksums
+        cat build/SHA256SUMS
+
     # Because github action's way of referencing commits and tags sucks
     - name: Get the version
       id: get_version
@@ -44,48 +61,70 @@ jobs:
         prerelease: false
 
     # Upload Release assets
-    - name: Upload Regular Font [Cascadia]
+    - name: Upload Cascadia
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/Cascadia/Caskaydia Cove Nerd Font Complete.ttf
+        asset_name: Caskaydia Cove Nerd Font Complete.ttf
+        asset_content_type: font/ttf
+
+    - name: Cascadia Windows
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/Cascadia/Caskaydia Cove Nerd Font Complete Windows Compatible.ttf
+        asset_name: Caskaydia Cove Nerd Font Complete Windows Compatible.ttf
+        asset_content_type: font/ttf
+
+   # Cascadia Mono
+    - name: Upload Cascadia Mono
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/Cascadia/Caskaydia Mono Nerd Font Complete.ttf
+        asset_name: Caskaydia Mono Nerd Font Complete.ttf
+        asset_content_type: font/ttf
+
+    - name: Cascadia Mono Windows
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/Cascadia/Caskaydia Mono Nerd Font Complete Windows Compatible.ttf
+        asset_name: Caskaydia Mono Nerd Font Complete Windows Compatible.ttf
+        asset_content_type: font/ttf
+
+    # Fantasque
+    - name: Upload Fantasque
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/StarshipCode.ttf
-        asset_name: StarshipCode.ttf
+        asset_path: build/Fantasque/Fantasque Sans Mono Regular Nerd Font Complete.ttf
+        asset_name: Fantasque Sans Mono Regular Nerd Font Complete.ttf
         asset_content_type: font/ttf
 
-    - name: Upload Mono Font [Cascadia]
+    - name: Upload Fantasque Windows
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/StarshipMono.ttf
-        asset_name: StarshipMono.ttf
+        asset_path: build/Fantasque/Fantasque Sans Mono Regular Nerd Font Complete Windows Compatible.ttf
+        asset_name: Fantasque Sans Mono Regular Nerd Font Complete Windows Compatible.ttf
         asset_content_type: font/ttf
 
-    - name: Upload Regular Font [Cascadia-Windows]
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/StarshipCode-Windows.ttf
-        asset_name: StarshipCode-Windows.ttf
-        asset_content_type: font/ttf
-
-    - name: Upload Mono Font [Cascadia-Windows]
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/StarshipMono-Windows.ttf
-        asset_name: StarshipMono-Windows.ttf
-        asset_content_type: font/ttf
-
+    # Checksums
     - name: Upload Checksums
       uses: actions/upload-release-asset@v1
       env:

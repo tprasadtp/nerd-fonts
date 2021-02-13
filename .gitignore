@@ -207,6 +207,5 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/linux,macos,python,windows,fontforge,virtualenv
 
 build/
-src/
 .prepare
 vendor/

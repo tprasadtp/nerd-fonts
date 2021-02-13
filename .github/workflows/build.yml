@@ -2,8 +2,7 @@ name: build
 on:
   push:
     branches:
-      - master
-      - stable
+      - "**"
     paths-ignore:
       - ".gitignore"
       - ".editorconfig"
@@ -13,45 +12,58 @@ on:
   pull_request:
     branches:
       - master
+      - dev
 
 jobs:
   build:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2
+
     - name: Install FontForge
       run: |
         sudo add-apt-repository ppa:fontforge/fontforge -y -u
         sudo apt-get install -y fontforge python-pip
         sudo -H pip install configparser
+
     - name: Prepare
       run: make prepare
-    - name: Build Patched fonts
+
+    - name: Build Cascadia
       run: make cascadia
-    - name: Build Patched fonts [Windows]
+
+    - name: Build Cascadia [Windows]
       run: make cascadia-win
+
+    - name: Build Cascadia Mono
+      run: make cascadia-mono
+
+    - name: Build Cascadia Mono [Windows]
+      run: make cascadia-mono-win
+
+    - name: Build Fantasque-Sans-Mono
+      run: make fantasque
+
+    - name: Build Fantasque-Sans-Mono [Windows]
+      run: make fantasque-win
 
     # checksums
     - name: Generate checksums
       run: |
         make release-notes
-        cd build
-        sha256sum *.ttf > SHA256SUMS
+        make checksums
+        cat build/SHA256SUMS
 
-    # Upload Starship
-    - name: Upload StarshipFonts
+    # Upload
+    - name: Upload CascadiaCode
       uses: actions/upload-artifact@v2
       with:
-        name:  StarshipFonts
-        path: |
-          build/StarshipCode.ttf
-          build/StarshipMono.ttf
+        name:  CascadiaCode
+        path: build/Cascadia/
 
-    # Windows versions
-    - name: Upload Starship-Windows
+    # Fantasque Sans Mono
+    - name: Upload Fantasque-Sans-Mono
       uses: actions/upload-artifact@v2
       with:
-        name:  Starship-Windows
-        path: |
-          build/StarshipCode-Windows.ttf
-          build/StarshipMono-Windows.ttf
+        name:  Fantasque-Sans-Mono
+        path: build/Fantasque/

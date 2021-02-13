@@ -1,14 +1,25 @@
-# Cascadia Code + Nerd Fonts = Starship
+# Custom Patched Nerd Fonts
 
 [![build](https://github.com/tprasadtp/starship-fonts/workflows/build/badge.svg)](https://github.com/tprasadtp/starship-fonts/actions?query=workflow%3Abuild)
 [![release](https://github.com/tprasadtp/starship-fonts/workflows/release/badge.svg)](https://github.com/tprasadtp/starship-fonts/actions?query=workflow%3Arelease)
-[![Starship](https://img.shields.io/github/v/release/tprasadtp/starship-fonts?label=starship&labelColor=313131)](https://github.com/tprasadtp/starship-fonts/releases)
-[![Upstream](https://img.shields.io/github/v/release/microsoft/cascadia-code?label=upstream&labelColor=313131)](https://github.com/microsoft/cascadia-code/releases/latest)
+[![Version](https://img.shields.io/github/v/release/tprasadtp/starship-fonts?label=version&labelColor=313131)](https://github.com/tprasadtp/starship-fonts/releases)
 [![License](https://img.shields.io/badge/license-MIT-orange?labelColor=313131)](https://github.com/tprasadtp/starship-fonts/blob/master/LICENSE)
+![Analytics](https://ga-beacon.prasadt.com/UA-101760811-3/github/starship-fonts/?color=pink)
+
+Currently has Cascadia code and Fantasque Sans Mono. Custom glyphs start from E900.
+
+
+## Try
+
+If you do not see symbols then you did not install the font properly. Try re-opening your terminal if you just installed the font.
+```bash
+# Fonts work on all shells
+# This command however works only on BASH/ZSH is shells.
+echo -e " \uE900  \uE901 \uE903 \uE904 \uE905 \uE906 \uE907 \uE908 \uE909 \uE90a \uE90b \uE90c"
+```
 
 ## Thanks
 
-- [Scott Hanselman](https://www.hanselman.com/blog/PatchingTheNewCascadiaCodeToIncludePowerlineGlyphsAndOtherNerdFontsForTheWindowsTerminal.aspx)
 - [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts)
 - [Cascadia Code](https://github.com/microsoft/cascadia-code)
 - [JetBrains mono](https://jetbrains.com/mono)
