@@ -35,6 +35,12 @@ jobs:
     - name: Build Cascadia [Windows]
       run: make cascadia-win
 
+    - name: Build Cascadia Mono
+      run: make cascadia-mono
+
+    - name: Build Cascadia Mono [Windows]
+      run: make cascadia-mono-win
+
     - name: Build Fantasque-Sans-Mono
       run: make fantasque
 
