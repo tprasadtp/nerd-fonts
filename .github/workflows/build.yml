@@ -2,8 +2,7 @@ name: build
 on:
   push:
     branches:
-      - master
-      - stable
+      - "**"
     paths-ignore:
       - ".gitignore"
       - ".editorconfig"
@@ -13,6 +12,7 @@ on:
   pull_request:
     branches:
       - master
+      - dev
 
 jobs:
   build:
