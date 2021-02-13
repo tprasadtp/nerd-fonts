@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   role="img"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="microsoftoutlook.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="747"
+     inkscape:window-height="480"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="9.8333333"
+     inkscape:cx="12"
+     inkscape:cy="12"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg6" />
+  <title
+     id="title2">Microsoft Outlook icon</title>
+  <path
+     d="m 8.704,12.032 q 0,0.36 -0.088,0.696 -0.08,0.328 -0.264,0.592 -0.176,0.264 -0.464,0.416 -0.296,0.16 -0.696,0.16 -0.4,0 -0.68,-0.16 -0.28,-0.168 -0.456,-0.44 -0.176,-0.264 -0.264,-0.6 -0.08,-0.336 -0.08,-0.688 0,-0.352 0.08,-0.696 0.08,-0.344 0.272,-0.608 0.176,-0.272 0.472,-0.432 0.288,-0.16 0.696,-0.16 0.408,0 0.688,0.16 0.28,0.168 0.456,0.44 0.176,0.272 0.248,0.616 0.08,0.344 0.08,0.704 z M 21.6,12 v 7.504 q 0,0.368 -0.264,0.64 -0.264,0.256 -0.64,0.256 H 8.104 q -0.368,0 -0.64,-0.264 -0.256,-0.264 -0.256,-0.64 V 16.8 H 3.2 Q 2.872,16.8 2.64,16.56 2.4,16.328 2.4,16 V 8 Q 2.4,7.672 2.64,7.44 2.864,7.2 3.2,7.2 H 8.4 V 4.44 Q 8.4,4.088 8.64,3.84 8.88,3.6 9.24,3.6 h 10.32 q 0.352,0 0.6,0.24 0.24,0.24 0.24,0.6 v 6.64 l 0.992,0.576 H 21.4 Q 21.48,11.712 21.544,11.8 21.6,11.896 21.6,12 Z M 16.8,5.4 v 2.4 h 2.4 V 5.4 Z m 0,3.6 v 2.4 h 2.4 V 9 Z m 0,3.6 v 1.464 L 19.24,12.6 Z M 12.6,5.4 v 2.4 h 3 V 5.4 Z m 0,3.6 v 2.4 h 3 V 9 Z m 0,3.6 v 1.624 l 1.928,1.2 1.072,-0.64 V 12.6 Z m -3,-7.2 v 1.8 h 1.6 L 11.304,7.208 11.4,7.24 V 5.4 Z m -2.416,9.784 q 0.72,0 1.28,-0.24 0.56,-0.256 0.952,-0.688 Q 9.8,13.816 10,13.232 10.2,12.64 10.2,11.944 10.2,11.28 10,10.704 9.808,10.136 9.432,9.712 9.056,9.288 8.512,9.048 7.968,8.808 7.272,8.808 6.536,8.808 5.96,9.048 5.392,9.288 5,9.728 4.6,10.16 4.4,10.768 4.2,11.36 4.2,12.072 q 0,0.68 0.208,1.248 0.208,0.576 0.592,0.984 0.384,0.416 0.936,0.648 0.552,0.24 1.248,0.24 z M 8.4,19.2 h 9.912 L 12,15.264 V 16 q 0,0.328 -0.24,0.56 -0.232,0.24 -0.56,0.24 H 8.4 Z m 12,-0.104 v -5.792 l -4.72,2.832 z"
+     id="path4"
+     inkscape:connector-curvature="0"
+     style="stroke-width:0.80000001" />
+</svg>

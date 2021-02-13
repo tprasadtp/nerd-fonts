@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   role="img"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="roundcube.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="747"
+     inkscape:window-height="480"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="9.8333333"
+     inkscape:cx="12"
+     inkscape:cy="12"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg6" />
+  <title
+     id="title2">Roundcube icon</title>
+  <path
+     d="m 18.32,9.28 c 0,0.96 -0.24,1.84 -0.56,2.64 L 18.32,11.6 21.04,10 18.88,8.8 C 18.64,5.2 15.68,2.4 12,2.4 8.32,2.4 5.36,5.2 5.12,8.8 l -2.16,1.28 2.48,1.44 0.72,0.4 C 5.76,11.12 5.6,10.24 5.6,9.28 c 0,-3.52 2.88,-6.32 6.32,-6.32 3.6,0 6.4,2.8 6.4,6.32 z M 2.48,16.24 11.76,21.6 V 15.68 L 2.48,10.32 Z m 9.76,-0.56 v 5.92 l 9.28,-5.36 v -5.92 z"
+     id="path4"
+     inkscape:connector-curvature="0"
+     style="stroke-width:0.80000001" />
+</svg>

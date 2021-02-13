@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   role="img"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="hugo.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="747"
+     inkscape:window-height="480"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="9.8333333"
+     inkscape:cx="12"
+     inkscape:cy="12"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg6" />
+  <title
+     id="title2">Hugo icon</title>
+  <path
+     d="m 11.8032,2.399998 a 3.1984,3.1984 0 0 0 -1.6392,0.4768 l -5.1,3.1488 a 3.4016,3.4016 0 0 0 -1.6136,2.892 v 6.424 c 0,1.1784 0.632,2.2704 1.6536,2.8592 l 5.1888,2.9864 a 3.104,3.104 0 0 0 3.068,0.0144 l 5.6344,-3.1728 a 3.0536,3.0536 0 0 0 1.5544,-2.6584 v -6.7688 a 2.856,2.856 0 0 0 -1.4192,-2.4672 l -5.6768,-3.3016 a 3.1984,3.1984 0 0 0 -1.6504,-0.432 z m 0.0176,1.3392 c 0.3304,-0.0048 0.6624,0.08 0.96,0.252 l 5.676,3.3016 c 0.4672,0.272 0.7528,0.768 0.752,1.308 v 6.7696 c 0,0.6192 -0.3312,1.1872 -0.8712,1.4912 l -5.6336,3.1728 a 1.7592,1.7592 0 0 1 -1.7432,-0.008 l -5.188,-2.9872 a 1.9576,1.9576 0 0 1 -0.9824,-1.6984 v -6.424 c 0,-0.7144 0.3688,-1.376 0.9768,-1.752 l 5.1008,-3.148 a 1.8584,1.8584 0 0 1 0.952,-0.2776 z m -3.76,3.0752 v 10.2816 h 2.152 v -4.496 h 3.568 v 4.496 h 2.1568 v -10.2816 h -2.1568 v 3.7448 h -3.568 v -3.7448 z"
+     id="path4"
+     inkscape:connector-curvature="0"
+     style="stroke-width:0.80000001" />
+</svg>
