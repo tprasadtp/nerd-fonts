@@ -11,13 +11,13 @@ VERSION := 0.6.0
 ROOT_DIR := $(strip $(patsubst %/, %, $(dir $(realpath $(firstword $(MAKEFILE_LIST))))))
 
 .PHONY: help
-help: ### This help message
+help: ## This help message
 	@printf "%-20s %s\n" "Target" "Help"
 	@printf "%-20s %s\n" "-----" "-----"
-	@grep -E '^[a-zA-Z_-]+:.*?### .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?### "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: all
-all: cascadia cascadia-mono cascadia-win cascadia-mono-win fantasque fantasque-win
+all: cascadia cascadia-mono cascadia-italic cascadia-win cascadia-italic-win cascadia-mono-win fantasque fantasque-win release-notes  ## Patch all fonts
 
 .PHONY: cascadia
 cascadia: ## Patch CascadiaCode Regular
@@ -103,6 +103,41 @@ cascadia-mono-win: ## Patch CascadiaCode mono font (windows)
 			exit 1; \
 		fi
 
+.PHONY: cascadia-italic
+cascadia-italic: ## Patch CascadiaCode Italic
+	@echo -e "\033[1;92m➜ $@ \033[0m"
+	@mkdir -p "$(ROOT_DIR)/build"
+	@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
+	echo -e "\033[1;34m‣ CascadiaCode Build - Regular - $(GITHUB_RUN_NUMBER)\033[0m"; \
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--windows \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Cascadia" \
+		"${ROOT_DIR}/build/source-fonts/CascadiaCodeItalic.ttf"; \
+	else \
+		echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
+		exit 1; \
+	fi
+
+.PHONY: cascadia-italic-win
+cascadia-italic-win: ## Patch CascadiaCode Italic (windows)
+		@echo -e "\033[1;92m➜ $@ \033[0m"
+		@mkdir -p "$(ROOT_DIR)/build"
+		@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
+		echo -e "\033[1;34m‣ CascadiaCode Build - Italic - $(GITHUB_RUN_NUMBER)\033[0m"; \
+		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+			--complete \
+			--windows \
+			--no-progressbars \
+			--outputdir "${ROOT_DIR}/build/Cascadia" \
+			"${ROOT_DIR}/build/source-fonts/CascadiaCodeItalic.ttf"; \
+		else \
+			echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
+			exit 1; \
+		fi
+
+
 .PHONY: fantasque-win
 fantasque-win: ## Patch FantasqueSansMono (windows)
 	@echo -e "\033[1;92m➜ $@ \033[0m"
@@ -121,8 +156,6 @@ fantasque-win: ## Patch FantasqueSansMono (windows)
 		fi
 
 
-
-
 .PHONY: prepare
 prepare: ## Download external assets required
 	@echo -e "\033[1;92m➜ $@ \033[0m"
@@ -131,12 +164,13 @@ prepare: ## Download external assets required
 	@mkdir -p vendor/fonts/Cascadia
 	@curl -sSfL https://github.com/microsoft/cascadia-code/releases/download/v$(CASCADIA_CODE_VERSION)/CascadiaCode-$(CASCADIA_CODE_VERSION).zip --output $(ROOT_DIR)/vendor/fonts/CascadiaCode.zip
 	@echo -e "\033[1;34m‣ Uncompress Cascadia Code\033[0m"
-	@unzip -d $(ROOT_DIR)/vendor/fonts/Cascadia $(ROOT_DIR)/vendor/fonts/CascadiaCode.zip
+	@unzip -o -d $(ROOT_DIR)/vendor/fonts/Cascadia $(ROOT_DIR)/vendor/fonts/CascadiaCode.zip
 
 	@echo -e "\033[1;34m‣ Open and close font files because FF is buggy\033[0m"
 	@mkdir -p $(ROOT_DIR)/build/source-fonts
 	@fontforge -quiet --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaCode.ttf   --output $(ROOT_DIR)/build/source-fonts/CascadiaCode.ttf
 	@fontforge -quiet --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaMono.ttf --output $(ROOT_DIR)/build/source-fonts/CascadiaMono.ttf
+	@fontforge -quiet --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaCodeItalic.ttf --output $(ROOT_DIR)/build/source-fonts/CascadiaCodeItalic.ttf
 
 
 	@echo -e "\033[1;34m‣ Download Upstream [FantasqueSansMono]\033[0m"
@@ -160,8 +194,8 @@ clean: ## Clean build artifacts
 .PHONY: checksums
 checksums: ## Generate SHA256 checksums for artifacts
 	@echo -e "\033[1;92m➜ $@ \033[0m"
-	cd $(ROOT_DIR)/build/Cascadia && sha256sum  ./*.ttf >  ../SHA256SUMS
-	cd $(ROOT_DIR)/build/Fantasque && sha256sum ./*.ttf >>  ../SHA256SUMS
+	cd $(ROOT_DIR)/build/Cascadia && sha256sum  ./*.ttf >  ../SHA256SUMS.txt
+	cd $(ROOT_DIR)/build/Fantasque && sha256sum ./*.ttf >>  ../SHA256SUMS.txt
 
 
 .PHONY: release-notes
