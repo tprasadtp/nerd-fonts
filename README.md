@@ -2,7 +2,6 @@
 
 [![build](https://github.com/tprasadtp/starship-fonts/workflows/build/badge.svg)](https://github.com/tprasadtp/starship-fonts/actions?query=workflow%3Abuild)
 [![release](https://github.com/tprasadtp/starship-fonts/workflows/release/badge.svg)](https://github.com/tprasadtp/starship-fonts/actions?query=workflow%3Arelease)
-[![Version](https://img.shields.io/github/v/release/tprasadtp/starship-fonts?label=version&labelColor=313131)](https://github.com/tprasadtp/starship-fonts/releases)
 [![License](https://img.shields.io/badge/license-MIT-orange?labelColor=313131)](https://github.com/tprasadtp/starship-fonts/blob/master/LICENSE)
 ![Analytics](https://ga-beacon.prasadt.com/UA-101760811-3/github/starship-fonts/?color=pink)
 
@@ -22,14 +21,13 @@ echo -e " \uE900  \uE901 \uE903 \uE904 \uE905 \uE906 \uE907 \uE908 \uE909 \uE90a
 
 | Type | From | To
 |---|---|---
-| Cloud Services | E900 | E90F
-| Git Service providers | EB00 | EB0A
-| Hashicorp | EC00 | EC06
-| OS Logos | EC20 | EC35
-| Other software | EE00 | EE0E
+| [Cloud Services](./docs/cloud-services.png) | E900 | E90F
+| [Git Service Providers](./docs/git-remotes.png) | EB00 | EB0A
+| [Hashicorp](./docs/hashicorp.png) | EC00 | EC06
+| [OS Logos](./docs/os-logos.png) | EC20 | EC35
+| [Other software](./docs/other-software.png) | EE00 | EE0E
 
 ## Thanks
 
 - [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts)
 - [Cascadia Code](https://github.com/microsoft/cascadia-code)
-- [JetBrains mono](https://jetbrains.com/mono)

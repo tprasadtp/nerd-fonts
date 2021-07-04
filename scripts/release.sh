@@ -22,9 +22,6 @@ else
 	echo "Current Version: $CURRENT_VERSION"
 	echo "Latest Release : $LATEST_RELEASE"
 
-	echo "Create: Tag"
-	git tag "$CURRENT_VERSION"
-
 	if [[ ! -e build/release-notes.md ]]; then
 		echo "Create: Release Notes"
 		make release-notes
