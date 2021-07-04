@@ -47,6 +47,9 @@ jobs:
     - name: Build Fantasque-Sans-Mono [Windows]
       run: make fantasque-win
 
+    - name: LS
+      run: ls -R build
+
     # checksums
     - name: Generate checksums
       run: |

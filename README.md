@@ -18,6 +18,16 @@ If you do not see symbols then you did not install the font properly. Try re-ope
 echo -e " \uE900  \uE901 \uE903 \uE904 \uE905 \uE906 \uE907 \uE908 \uE909 \uE90a \uE90b \uE90c"
 ```
 
+## Custom Glyphs
+
+| Type | From | To
+|---|---|---
+| Cloud Services | E900 | E90F
+| Git Service providers | EB00 | EB0A
+| Hashicorp | EC00 | EC06
+| OS Logos | EC20 | EC35
+| Other software | EE00 | EE0E
+
 ## Thanks
 
 - [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts)
