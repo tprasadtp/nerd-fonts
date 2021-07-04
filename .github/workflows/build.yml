@@ -32,26 +32,23 @@ jobs:
     - name: Build Cascadia Regular
       run: make cascadia-regular
 
-    - name: Build Cascadia Regular [Windows]
-      run: make cascadia-regular-win
-
     - name: Build Cascadia Italic
       run: make cascadia-italic
-
-    - name: Build Cascadia Italic [Windows]
-      run: make cascadia-italic-win
 
     - name: Build Cascadia Mono
       run: make cascadia-mono
 
-    - name: Build Cascadia Mono [Windows]
-      run: make cascadia-mono-win
-
     - name: Build Fantasque-Sans-Mono
       run: make fantasque
 
-    - name: Build Fantasque-Sans-Mono [Windows]
-      run: make fantasque-win
+    - name: Build FiraCode
+      run: make firacode
+
+    - name: Build Ubuntu Regular
+      run: make ubuntu-regular
+
+    - name: Build Ubuntu Mono
+      run: make ubuntu-mono
 
     - name: LS
       run: ls -R build
@@ -76,6 +73,20 @@ jobs:
       with:
         name:  Fantasque-Sans-Mono
         path: build/Fantasque/
+
+    # FiraCode Sans Mono
+    - name: Upload FiraCode
+      uses: actions/upload-artifact@v2
+      with:
+        name:  FiraCode
+        path: build/FiraCode/
+
+    # Ubuntu
+    - name: Upload Ubuntu
+      uses: actions/upload-artifact@v2
+      with:
+        name:  Ubuntu
+        path: build/Ubuntu/
 
     - name: Release
       if: startsWith(github.ref, 'refs/tags/v')

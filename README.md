@@ -1,12 +1,15 @@
 # Custom Patched Nerd Fonts
 
 [![build](https://github.com/tprasadtp/starship-fonts/workflows/build/badge.svg)](https://github.com/tprasadtp/starship-fonts/actions?query=workflow%3Abuild)
-[![release](https://github.com/tprasadtp/starship-fonts/workflows/release/badge.svg)](https://github.com/tprasadtp/starship-fonts/actions?query=workflow%3Arelease)
 [![License](https://img.shields.io/badge/license-MIT-orange?labelColor=313131)](https://github.com/tprasadtp/starship-fonts/blob/master/LICENSE)
 ![Analytics](https://ga-beacon.prasadt.com/UA-101760811-3/github/starship-fonts/?color=pink)
 
-Currently has Cascadia code and Fantasque Sans Mono. Custom glyphs start from E900.
+Currently supports following custom builds.
 
+  - Cascadia code
+  - Fantasque Sans Mono
+  - FiraCode
+  - Ubuntu
 
 ## Try
 
@@ -26,6 +29,13 @@ echo -e " \uE900  \uE901 \uE903 \uE904 \uE905 \uE906 \uE907 \uE908 \uE909 \uE90a
 | [Hashicorp](./docs/hashicorp.png) | EC00 | EC06
 | [OS Logos](./docs/os-logos.png) | EC20 | EC35
 | [Other software](./docs/other-software.png) | EE00 | EE0E
+
+## Build
+
+```bash
+make prepare
+make all
+```
 
 ## Thanks
 

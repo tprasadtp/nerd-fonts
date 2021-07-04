@@ -43,5 +43,7 @@ else
 		"$CURRENT_VERSION" \
 		build/Cascadia/*.ttf \
 		build/Fantasque/*.ttf \
+		build/FiraCode/*.ttf \
+		build/Ubuntu/*.ttf \
 		build/SHA256SUMS.txt
 fi
