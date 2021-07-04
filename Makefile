@@ -17,10 +17,10 @@ help: ## This help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: all
-all: cascadia cascadia-mono cascadia-italic cascadia-win cascadia-italic-win cascadia-mono-win fantasque fantasque-win release-notes  ## Patch all fonts
+all: cascadia-regular cascadia-regular-mono cascadia-italic cascadia-win cascadia-italic-win cascadia-mono-win fantasque fantasque-win release-notes  ## Patch all fonts
 
-.PHONY: cascadia
-cascadia: ## Patch CascadiaCode Regular
+.PHONY: cascadia-regular
+cascadia-regular: ## Patch CascadiaCode Regular
 	@echo -e "\033[1;92m➜ $@ \033[0m"
 	@mkdir -p "$(ROOT_DIR)/build"
 	@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
@@ -35,8 +35,8 @@ cascadia: ## Patch CascadiaCode Regular
 		exit 1; \
 	fi
 
-.PHONY: cascadia-mono
-cascadia-mono: ## Patch CascadiaCode mono font
+.PHONY: cascadia-regular-mono
+cascadia-regular-mono: ## Patch CascadiaCode mono font
 		@echo -e "\033[1;92m➜ $@ \033[0m"
 		@mkdir -p "$(ROOT_DIR)/build"
 		@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
