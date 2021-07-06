@@ -23,27 +23,25 @@ else
 	echo "Latest Release : $LATEST_RELEASE"
 
 	if [[ ! -e build/release-notes.md ]]; then
-		echo "Create: Release Notes"
+		echo "---> Create: Release Notes"
 		make release-notes
 	else
-		echo "Using existing release notes"
+		echo "---> Using existing release notes"
 	fi
 
 	if [[ ! -e build/release-notes.md ]]; then
-		echo "Create: Checksums"
+		echo "---> Create: Checksums"
 		make checksums
 	else
 		echo "Using existing checksums notes"
 	fi
 
-	echo "Create: GH-Release"
+	echo "---> Create: GH-Release"
 	gh release create \
+		--draft \
 		--notes-file build/release-notes.md \
 		--title "$CURRENT_VERSION" \
 		"$CURRENT_VERSION" \
-		build/Cascadia/*.ttf \
-		build/Fantasque/*.ttf \
-		build/FiraCode/*.ttf \
-		build/Ubuntu/*.ttf \
-		build/SHA256SUMS.txt
+		"$(find ${REPO_ROOT:-.}/build/ -type f -not -iwholename '**/source-fonts/**' -regex  '.*\(ttf\|txt\)$')"
+
 fi
