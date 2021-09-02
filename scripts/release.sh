@@ -33,7 +33,7 @@ else
 		echo "---> Create: Checksums"
 		make checksums
 	else
-		echo "Using existing checksums notes"
+		echo "Using existing release notes"
 	fi
 
 	echo "---> Create: GH-Release"
@@ -42,6 +42,5 @@ else
 		--notes-file build/release-notes.md \
 		--title "$CURRENT_VERSION" \
 		"$CURRENT_VERSION" \
-		"$(find ${REPO_ROOT:-.}/build/ -type f -not -iwholename '**/source-fonts/**' -regex  '.*\(ttf\|txt\)$')"
-
+		build/Cascadia/*.ttf build/FiraCode/*.ttf build/Fantasque/*.ttf build/Ubuntu/*.ttf
 fi
