@@ -3,7 +3,7 @@ SHELL := /bin/bash
 GITHUB_RUN_NUMBER ?= NA
 
 NERDFONT_VERSION := a192bff
-CASCADIA_CODE_VERSION := 2105.24
+CASCADIA_CODE_VERSION := 2110.31
 UBUNTU_FONT_VERSION:= 0.83
 FIRACODE_VERSION := 5.2
 FANTASQUE_VERSION := v1.8.0
@@ -176,7 +176,7 @@ ubuntu-mono: ## Patch Ubuntu Mono
 			--complete \
 			--windows \
 			--no-progressbars \
-			--outputdir "${ROOT_DIR}/build/Fantasque" \
+			--outputdir "${ROOT_DIR}/build/Ubuntu" \
  		"${ROOT_DIR}/vendor/fonts/Ubuntu/ubuntu-font-family-$(UBUNTU_FONT_VERSION)/UbuntuMono-R.ttf"; \
 		else \
 			echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \

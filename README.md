@@ -2,7 +2,6 @@
 
 [![build](https://github.com/tprasadtp/starship-fonts/workflows/build/badge.svg)](https://github.com/tprasadtp/starship-fonts/actions?query=workflow%3Abuild)
 [![License](https://img.shields.io/badge/license-MIT-orange?labelColor=313131)](https://github.com/tprasadtp/starship-fonts/blob/master/LICENSE)
-![Analytics](https://ga-beacon.prasadt.com/UA-101760811-3/github/starship-fonts/?color=pink)
 
 Currently supports following custom builds.
 
