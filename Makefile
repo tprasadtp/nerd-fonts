@@ -297,7 +297,6 @@ clean: ## Clean build artifacts
 checksums: ## Generate SHA256 checksums for artifacts
 	cd $(ROOT_DIR)/build/Cascadia && sha256sum  *.ttf >  ../SHA256SUMS.txt
 	cd $(ROOT_DIR)/build/FantasqueSans && sha256sum *.ttf >>  ../SHA256SUMS.txt
-	cd $(ROOT_DIR)/build/FiraCode && sha256sum *.ttf >>  ../SHA256SUMS.txt
 	cd $(ROOT_DIR)/build/Ubuntu && sha256sum *.ttf >>  ../SHA256SUMS.txt
 
 .PHONY: all
