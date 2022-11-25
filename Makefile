@@ -1,257 +1,304 @@
 SHELL := /bin/bash
 
-GITHUB_RUN_NUMBER ?= NA
-
-NERDFONT_VERSION := a192bff
-CASCADIA_CODE_VERSION := 2110.31
-UBUNTU_FONT_VERSION:= 0.83
+CASCADIA_CODE_VERSION := v2111.01
 FIRACODE_VERSION := 5.2
 FANTASQUE_VERSION := v1.8.0
-VERSION := 0.6.0
-
+UBUNTU_FONT_VERSION := 0.83
 
 ROOT_DIR := $(strip $(patsubst %/, %, $(dir $(realpath $(firstword $(MAKEFILE_LIST))))))
 
 .PHONY: help
 help: ## This help message
-	@printf "%-20s %s\n" "Target" "Help"
-	@printf "%-20s %s\n" "-----" "-----"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@printf "%-30s %s\n" "Target" "Help"
+	@printf "%-30s %s\n" "-----" "-----"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: all
-all: cascadia-regular cascadia-mono cascadia-italic fantasque firacode ubuntu-regular ubuntu-mono checksums release-notes  ## Patch all fonts
+.PHONY: vendor
+vendor: vendor-cascadia vendor-fantasque vendor-ubuntu ## Vendor all fonts
 
-.PHONY: cascadia-regular
-cascadia-regular: ## Patch CascadiaCode Regular
-	@echo -e "\033[1;92m➜ $@ \033[0m"
-	@mkdir -p "$(ROOT_DIR)/build"
-	@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
-	echo -e "\033[1;34m‣ CascadiaCode Build - Regular - $(GITHUB_RUN_NUMBER)\033[0m"; \
+.PHONY: vendor-cascadia
+vendor-cascadia: ## Download and vendor Cascadia code
+	@echo "--> Download Cascadia Code"
+	@mkdir -p $(ROOT_DIR)/build/download
+	@mkdir -p $(ROOT_DIR)/vendor/Cascadia
+	curl -sSfL https://github.com/microsoft/cascadia-code/releases/download/$(CASCADIA_CODE_VERSION)/CascadiaCode-$(CASCADIA_CODE_VERSION:v%=%).zip \
+		--output $(ROOT_DIR)/build/download/CascadiaCode.zip
+	@echo "--> Download Cascadia Code (LICENSE)"
+	curl -sSfL https://raw.githubusercontent.com/microsoft/cascadia-code/$(CASCADIA_CODE_VERSION)/LICENSE \
+		--output $(ROOT_DIR)/vendor/Cascadia/LICENSE
+	@echo "--> Vendor Cascadia Code"
+	unzip -j -o \
+		-d $(ROOT_DIR)/vendor/Cascadia/ \
+		$(ROOT_DIR)/build/download/CascadiaCode.zip \
+		ttf/CascadiaCode.ttf \
+		ttf/CascadiaCodeItalic.ttf \
+		ttf/CascadiaMono.ttf \
+		ttf/CascadiaMonoItalic.ttf
+
+	mv -f $(ROOT_DIR)/vendor/Cascadia/CascadiaCode.ttf $(ROOT_DIR)/vendor/Cascadia/CascadiaCode-Regular.ttf
+	mv -f $(ROOT_DIR)/vendor/Cascadia/CascadiaMono.ttf $(ROOT_DIR)/vendor/Cascadia/CascadiaMono-Regular.ttf
+
+	mv -f $(ROOT_DIR)/vendor/Cascadia/CascadiaCodeItalic.ttf $(ROOT_DIR)/vendor/Cascadia/CascadiaCode-Italic.ttf
+	mv -f $(ROOT_DIR)/vendor/Cascadia/CascadiaMonoItalic.ttf $(ROOT_DIR)/vendor/Cascadia/CascadiaMono-Italic.ttf
+
+	@echo "$(CASCADIA_CODE_VERSION)" > $(ROOT_DIR)/vendor/Cascadia/VERSION.txt
+
+
+.PHONY: vendor-fantasque
+vendor-fantasque: ## Download and vendor FantasqueSans
+	@echo "--> Download FantasqueSans"
+	@mkdir -p $(ROOT_DIR)/build/download/FantasqueSans
+	@mkdir -p $(ROOT_DIR)/vendor/FantasqueSans
+	curl -sSfL https://github.com/belluzj/fantasque-sans/releases/download/$(FANTASQUE_VERSION)/FantasqueSansMono-NoLoopK.zip \
+		--output $(ROOT_DIR)/build/download/FantasqueSansMono.zip
+
+	@echo "--> Vendor FantasqueSans"
+	unzip -j -o \
+		-d $(ROOT_DIR)/vendor/FantasqueSans/ \
+		$(ROOT_DIR)/build/download/FantasqueSansMono.zip \
+		TTF/FantasqueSansMono-Regular.ttf \
+		TTF/FantasqueSansMono-Italic.ttf \
+		LICENSE.txt
+	@echo "$(FANTASQUE_VERSION)" > $(ROOT_DIR)/vendor/FantasqueSans/VERSION.txt
+
+
+.PHONY: vendor-ubuntu
+vendor-ubuntu: ## Download and vendor FantasqueSans
+	@echo "--> Download Ubuntu"
+	@mkdir -p $(ROOT_DIR)/build/download
+	curl -sSfL https://assets.ubuntu.com/v1/0cef8205-ubuntu-font-family-0.83.zip \
+		--output $(ROOT_DIR)/build/download/Ubuntu.zip
+
+	@echo "--> Vendor Ubuntu"
+	@mkdir -p $(ROOT_DIR)/vendor/Ubuntu
+	unzip -j -o \
+		-d $(ROOT_DIR)/vendor/Ubuntu/ \
+		$(ROOT_DIR)/build/download/Ubuntu.zip \
+		ubuntu-font-family-0.83/Ubuntu-R.ttf \
+		ubuntu-font-family-0.83/Ubuntu-RI.ttf \
+		ubuntu-font-family-0.83/Ubuntu-L.ttf \
+		ubuntu-font-family-0.83/Ubuntu-LI.ttf \
+		ubuntu-font-family-0.83/Ubuntu-M.ttf \
+		ubuntu-font-family-0.83/Ubuntu-MI.ttf \
+		ubuntu-font-family-0.83/UbuntuMono-R.ttf \
+		ubuntu-font-family-0.83/UbuntuMono-RI.ttf \
+		ubuntu-font-family-0.83/LICENCE.txt \
+		ubuntu-font-family-0.83/TRADEMARKS.txt
+	mv -f $(ROOT_DIR)/vendor/Ubuntu/Ubuntu-R.ttf $(ROOT_DIR)/vendor/Ubuntu/Ubuntu-Regular.ttf
+	mv -f $(ROOT_DIR)/vendor/Ubuntu/Ubuntu-RI.ttf $(ROOT_DIR)/vendor/Ubuntu/Ubuntu-Regular-Italic.ttf
+
+	mv -f $(ROOT_DIR)/vendor/Ubuntu/Ubuntu-L.ttf $(ROOT_DIR)/vendor/Ubuntu/Ubuntu-Light-Italic.ttf
+	mv -f $(ROOT_DIR)/vendor/Ubuntu/Ubuntu-LI.ttf $(ROOT_DIR)/vendor/Ubuntu/Ubuntu-Light-Italic.ttf
+
+	mv -f $(ROOT_DIR)/vendor/Ubuntu/Ubuntu-M.ttf $(ROOT_DIR)/vendor/Ubuntu/Ubuntu-Medium.ttf
+	mv -f $(ROOT_DIR)/vendor/Ubuntu/Ubuntu-MI.ttf $(ROOT_DIR)/vendor/Ubuntu/Ubuntu-Medium-Italic.ttf
+
+	mv -f $(ROOT_DIR)/vendor/Ubuntu/UbuntuMono-R.ttf $(ROOT_DIR)/vendor/Ubuntu/UbuntuMono-Regular.ttf
+	mv -f $(ROOT_DIR)/vendor/Ubuntu/UbuntuMono-RI.ttf $(ROOT_DIR)/vendor/Ubuntu/UbuntuMono-Regular-Italic.ttf
+
+	@echo "0.83" > $(ROOT_DIR)/vendor/FantasqueSans/VERSION.txt
+
+.PHONY: release-notes
+release-notes: ## Generate release notes
+	@echo "-> Release Notes"
+	@mkdir -p $(ROOT_DIR)/build
+	@echo "# Release Notes" > $(ROOT_DIR)/build/release-notes.md
+	@echo "| Name | Upstream | Version |" >> $(ROOT_DIR)/build/release-notes.md
+	@echo "|---|---|---|" >> $(ROOT_DIR)/build/release-notes.md
+	@echo "| Caskaydia Cove | [Cascadia Code](https://github.com/microsoft/cascadia-code) | ![cascadia](https://img.shields.io/badge/version-$(CASCADIA_CODE_VERSION)-blue?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
+	@echo "| Fantasque Sans Mono | [Fantasque Sans Mono](https://github.com/belluzj/fantasque-sans) | ![fantasque](https://img.shields.io/badge/version-$(FANTASQUE_VERSION)-brightgreen?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
+	@echo "| Ubuntu | [Ubuntu](https://design.ubuntu.com/font/) | ![ubuntu](https://img.shields.io/badge/version-$(UBUNTU_FONT_VERSION)-brightgreen?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
+	@echo "" >> $(ROOT_DIR)/build/release-notes.md
+
+.PHONY: cascadiacode-regular
+cascadiacode-regular: ## CascadiaCode Regular
+	@echo "-> CascadiaCode - Regular"
+	@mkdir -p "$(ROOT_DIR)/build/Cascadia"
 	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
 		--complete \
 		--no-progressbars \
 		--outputdir "${ROOT_DIR}/build/Cascadia" \
-		"${ROOT_DIR}/build/source-fonts/CascadiaCode.ttf"; \
-	echo -e "\033[1;34m‣ CascadiaCode Build - Regular - Windows - $(GITHUB_RUN_NUMBER)\033[0m"; \
+		"${ROOT_DIR}/vendor/Cascadia/CascadiaCode-Regular.ttf"
+	@echo "-> CascadiaCode - Regular (Windows)"
 	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
 		--complete \
 		--windows \
 		--no-progressbars \
 		--outputdir "${ROOT_DIR}/build/Cascadia" \
-		"${ROOT_DIR}/build/source-fonts/CascadiaCode.ttf"; \
-	else \
-		echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
-		exit 1; \
-	fi
+		"${ROOT_DIR}/vendor/Cascadia/CascadiaCode-Regular.ttf"
 
-.PHONY: cascadia-mono
-cascadia-mono: ## Patch Cascadia Mono
-		@echo -e "\033[1;92m➜ $@ \033[0m"
-		@mkdir -p "$(ROOT_DIR)/build"
-		@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
-		echo -e "\033[1;34m‣ CascadiaCode Build - Mono - $(GITHUB_RUN_NUMBER)\033[0m"; \
-		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
-			--complete \
-			--no-progressbars \
-			--outputdir "${ROOT_DIR}/build/Cascadia" \
-			"${ROOT_DIR}/build/source-fonts/CascadiaMono.ttf"; \
-		echo -e "\033[1;34m‣ CascadiaCode Build - Mono - Windows - $(GITHUB_RUN_NUMBER)\033[0m"; \
-		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
-			--complete \
-			--windows \
-			--no-progressbars \
-			--outputdir "${ROOT_DIR}/build/Cascadia" \
-			"${ROOT_DIR}/build/source-fonts/CascadiaMono.ttf"; \
-		else \
-			echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
-			exit 1; \
-		fi
-
-
-.PHONY: cascadia-italic
-cascadia-italic: ## Patch CascadiaCode Italic
-	@echo -e "\033[1;92m➜ $@ \033[0m"
-	@mkdir -p "$(ROOT_DIR)/build"
-	@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
-	echo -e "\033[1;34m‣ CascadiaCode Build - Italic - $(GITHUB_RUN_NUMBER)\033[0m"; \
+.PHONY: cascadiacode-italic
+cascadiacode-italic: ## CascadiaCode Italic
+	@echo "-> CascadiaCode - Italic"
+	@mkdir -p "$(ROOT_DIR)/build/Cascadia"
 	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
 		--complete \
 		--no-progressbars \
 		--outputdir "${ROOT_DIR}/build/Cascadia" \
-		"${ROOT_DIR}/build/source-fonts/CascadiaCodeItalic.ttf"; \
-	echo -e "\033[1;34m‣ CascadiaCode Build - Italic - Windows - $(GITHUB_RUN_NUMBER)\033[0m"; \
-		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
-			--complete \
-			--windows \
-			--no-progressbars \
-			--outputdir "${ROOT_DIR}/build/Cascadia" \
-			"${ROOT_DIR}/build/source-fonts/CascadiaCodeItalic.ttf"; \
-	else \
-		echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
-		exit 1; \
-	fi
+		"${ROOT_DIR}/vendor/Cascadia/CascadiaCode-Italic.ttf"
+	@echo "-> CascadiaCode - Italic (Windows)"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--windows \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Cascadia" \
+		"${ROOT_DIR}/vendor/Cascadia/CascadiaCode-Italic.ttf"
+
+.PHONY: cascadiamono-regular
+cascadiamono-regular: ## CascadiaMono Regular
+	@echo "-> CascadiaCode - Italic"
+	@mkdir -p "$(ROOT_DIR)/build/Cascadia"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Cascadia" \
+		"${ROOT_DIR}/vendor/Cascadia/CascadiaMono-Regular.ttf"
+	@echo "-> CascadiaCode - Italic (Windows)"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--windows \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Cascadia" \
+		"${ROOT_DIR}/vendor/Cascadia/CascadiaMono-Regular.ttf"
+
+.PHONY: cascadiamono-italic
+cascadiamono-italic: ## CascadiaMono Italic
+	@echo "-> CascadiaCode - Italic"
+	@mkdir -p "$(ROOT_DIR)/build/Cascadia"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Cascadia" \
+		"${ROOT_DIR}/vendor/Cascadia/CascadiaMono-Italic.ttf"
+	@echo "-> CascadiaCode - Italic (Windows)"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--windows \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Cascadia" \
+		"${ROOT_DIR}/vendor/Cascadia/CascadiaMono-Italic.ttf"
+
+.PHONY: cascadia
+cascadia: cascadiacode-regular cascadiacode-italic cascadiamono-regular cascadiamono-italic ## Build Cascadia (All)
+
+.PHONY: fantasque-regular
+fantasque-regular: ## FantasqueSansMono Regular
+	@echo "-> FantasqueSansMono - Regular"
+	@mkdir -p "$(ROOT_DIR)/build/FantasqueSans"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/FantasqueSans" \
+		"${ROOT_DIR}/vendor/FantasqueSans/FantasqueSansMono-Regular.ttf"
+	@echo "-> FantasqueSansMono - Regular (Windows)"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--windows \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/FantasqueSans" \
+		"${ROOT_DIR}/vendor/FantasqueSans/FantasqueSansMono-Regular.ttf"
+
+.PHONY: fantasque-italic
+fantasque-italic: ## FantasqueSansMono Italic
+	@echo "-> FantasqueSansMono - Italic"
+	@mkdir -p "$(ROOT_DIR)/build/FantasqueSans"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/FantasqueSans" \
+		"${ROOT_DIR}/vendor/FantasqueSans/FantasqueSansMono-Italic.ttf"
+	@echo "-> FantasqueSansMono - Italic (Windows)"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--windows \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/FantasqueSans" \
+		"${ROOT_DIR}/vendor/FantasqueSans/FantasqueSansMono-Italic.ttf"
 
 .PHONY: fantasque
-fantasque: ## Patch FantasqueSansMono
-	@echo -e "\033[1;92m➜ $@ \033[0m"
-	@mkdir -p "$(ROOT_DIR)/build"
-	@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
-		echo -e "\033[1;34m‣ FantasqueSansMono \033[0m"; \
-		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
-			--complete \
-			--no-progressbars \
-			--outputdir "${ROOT_DIR}/build/Fantasque" \
- 		"${ROOT_DIR}/vendor/fonts/Fantasque/TTF/FantasqueSansMono-Regular.ttf"; \
-		echo -e "\033[1;34m‣ FantasqueSansMono [Windows]\033[0m"; \
-		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
-			--complete \
-			--windows \
-			--no-progressbars \
-			--outputdir "${ROOT_DIR}/build/Fantasque" \
- 		"${ROOT_DIR}/vendor/fonts/Fantasque/TTF/FantasqueSansMono-Regular.ttf"; \
-		else \
-			echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
-			exit 1; \
-		fi
-
-.PHONY: firacode
-firacode: ## Patch FiraCode
-	@echo -e "\033[1;92m➜ $@ \033[0m"
-	@mkdir -p "$(ROOT_DIR)/build"
-	@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
-		echo -e "\033[1;34m‣ FiraCode Regular \033[0m"; \
-		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
-			--complete \
-			--no-progressbars \
-			--outputdir "${ROOT_DIR}/build/FiraCode" \
- 		"${ROOT_DIR}/vendor/fonts/FiraCode/ttf/FiraCode-Regular.ttf"; \
-		echo -e "\033[1;34m‣ FiraCode Regular [Windows]\033[0m"; \
-		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
-			--complete \
-			--windows \
-			--no-progressbars \
-			--outputdir "${ROOT_DIR}/build/FiraCode" \
- 		"${ROOT_DIR}/vendor/fonts/FiraCode/ttf/FiraCode-Regular.ttf"; \
-		else \
-			echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
-			exit 1; \
-		fi
+fantasque: fantasque-regular fantasque-italic ## Build FantasqueSansMono (All)
 
 .PHONY: ubuntu-regular
-ubuntu-regular: ## Patch Ubuntu
-	@echo -e "\033[1;92m➜ $@ \033[0m"
-	@mkdir -p "$(ROOT_DIR)/build"
-	@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
-		echo -e "\033[1;34m‣ Ubuntu \033[0m"; \
-		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
-			--complete \
-			--no-progressbars \
-			--outputdir "${ROOT_DIR}/build/Ubuntu" \
- 		"${ROOT_DIR}/vendor/fonts/Ubuntu/ubuntu-font-family-$(UBUNTU_FONT_VERSION)/Ubuntu-R.ttf"; \
-		echo -e "\033[1;34m‣ Ubuntu [Windows]\033[0m"; \
-		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
-			--complete \
-			--windows \
-			--no-progressbars \
-			--outputdir "${ROOT_DIR}/build/Fantasque" \
- 		"${ROOT_DIR}/vendor/fonts/Ubuntu/ubuntu-font-family-$(UBUNTU_FONT_VERSION)/Ubuntu-R.ttf"; \
-		else \
-			echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
-			exit 1; \
-		fi
+ubuntu-regular: ## Ubuntu Regular
+	@echo "-> Ubuntu - Regular"
+	@mkdir -p "$(ROOT_DIR)/build/Ubuntu"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Ubuntu" \
+		"${ROOT_DIR}/vendor/Ubuntu/Ubuntu-Regular.ttf"
+	@echo "-> Ubuntu - Regular (Windows)"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--windows \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Ubuntu" \
+		"${ROOT_DIR}/vendor/Ubuntu/Ubuntu-Regular.ttf"
 
-.PHONY: ubuntu-mono
-ubuntu-mono: ## Patch Ubuntu Mono
-	@echo -e "\033[1;92m➜ $@ \033[0m"
-	@mkdir -p "$(ROOT_DIR)/build"
-	@if [ -f $(ROOT_DIR)/build/.prepared ]; then \
-		echo -e "\033[1;34m‣ Ubuntu Mono Regular\033[0m"; \
-		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
-			--complete \
-			--no-progressbars \
-			--outputdir "${ROOT_DIR}/build/Ubuntu" \
- 		"${ROOT_DIR}/vendor/fonts/Ubuntu/ubuntu-font-family-$(UBUNTU_FONT_VERSION)/UbuntuMono-R.ttf"; \
-		echo -e "\033[1;34m‣ Ubuntu Mono Regular [Windows]\033[0m"; \
-		fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
-			--complete \
-			--windows \
-			--no-progressbars \
-			--outputdir "${ROOT_DIR}/build/Ubuntu" \
- 		"${ROOT_DIR}/vendor/fonts/Ubuntu/ubuntu-font-family-$(UBUNTU_FONT_VERSION)/UbuntuMono-R.ttf"; \
-		else \
-			echo -e "\033[1;93m✖ Did you run 'make prepare' before running this?\033[0m"; \
-			exit 1; \
-		fi
+.PHONY: ubuntu-regular-italic
+ubuntu-regular-italic: ## Ubuntu Regular Italic
+	@echo "-> Ubuntu - Regular Italic"
+	@mkdir -p "$(ROOT_DIR)/build/Ubuntu"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Ubuntu" \
+		"${ROOT_DIR}/vendor/Ubuntu/Ubuntu-Regular-Italic.ttf"
+	@echo "-> Ubuntu - Regular Italic (Windows)"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--windows \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Ubuntu" \
+		"${ROOT_DIR}/vendor/Ubuntu/Ubuntu-Regular-Italic.ttf"
 
+.PHONY: ubuntumono-regular
+ubuntumono-regular: ## UbuntuMono Regular
+	@echo "-> UbuntuMono - Regular"
+	@mkdir -p "$(ROOT_DIR)/build/Ubuntu"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Ubuntu" \
+		"${ROOT_DIR}/vendor/Ubuntu/UbuntuMono-Regular.ttf"
+	@echo "-> UbuntuMono - Regular (Windows)"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--windows \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Ubuntu" \
+		"${ROOT_DIR}/vendor/Ubuntu/UbuntuMono-Regular.ttf"
 
-.PHONY: prepare
-prepare: ## Download external assets required
-	@echo -e "\033[1;92m➜ $@ \033[0m"
+.PHONY: ubuntumono-regular-italic
+ubuntumono-regular-italic: ## UbuntuMono Regular Italic
+	@echo "-> UbuntuMono - Regular Italic"
+	@mkdir -p "$(ROOT_DIR)/build/Ubuntu"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Ubuntu" \
+		"${ROOT_DIR}/vendor/Ubuntu/UbuntuMono-Regular-Italic.ttf"
+	@echo "-> UbuntuMono - Regular Italic (Windows)"
+	fontforge -quiet --script "$(ROOT_DIR)/font-patcher" \
+		--complete \
+		--windows \
+		--no-progressbars \
+		--outputdir "${ROOT_DIR}/build/Ubuntu" \
+		"${ROOT_DIR}/vendor/Ubuntu/UbuntuMono-Regular-Italic.ttf"
 
-	@echo -e "\033[1;34m‣ Download Upstream [Cascadia Code]\033[0m"
-	@mkdir -p vendor/fonts/Cascadia
-	@curl -sSfL https://github.com/microsoft/cascadia-code/releases/download/v$(CASCADIA_CODE_VERSION)/CascadiaCode-$(CASCADIA_CODE_VERSION).zip --output $(ROOT_DIR)/vendor/fonts/CascadiaCode.zip
-	@echo -e "\033[1;34m‣ Uncompress Cascadia Code\033[0m"
-	@unzip -o -d $(ROOT_DIR)/vendor/fonts/Cascadia $(ROOT_DIR)/vendor/fonts/CascadiaCode.zip
-
-	@echo -e "\033[1;34m‣ Open and close font files because FF is buggy\033[0m"
-	@mkdir -p $(ROOT_DIR)/build/source-fonts
-	@fontforge -quiet --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaCode.ttf   --output $(ROOT_DIR)/build/source-fonts/CascadiaCode.ttf
-	@fontforge -quiet --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaMono.ttf --output $(ROOT_DIR)/build/source-fonts/CascadiaMono.ttf
-	@fontforge -quiet --script $(ROOT_DIR)/scripts/prepare-font --input $(ROOT_DIR)/vendor/fonts/Cascadia/ttf/CascadiaCodeItalic.ttf --output $(ROOT_DIR)/build/source-fonts/CascadiaCodeItalic.ttf
-
-
-	@echo -e "\033[1;34m‣ Download Upstream [FantasqueSansMono]\033[0m"
-	@mkdir -p vendor/fonts/Fantasque
-	@curl -sSfL https://github.com/belluzj/fantasque-sans/releases/download/$(FANTASQUE_VERSION)/FantasqueSansMono-NoLoopK.tar.gz --output $(ROOT_DIR)/vendor/fonts/FantasqueSansMono.tar.gz
-
-	@echo -e "\033[1;34m‣ Uncompress\033[0m"
-	@tar -xvf $(ROOT_DIR)/vendor/fonts/FantasqueSansMono.tar.gz -C $(ROOT_DIR)/vendor/fonts/Fantasque/
-
-	@echo -e "\033[1;34m‣ Download Upstream [FiraCode]\033[0m"
-	@mkdir -p vendor/fonts/FiraCode
-	@curl -sSfL https://github.com/tonsky/FiraCode/releases/download/$(FIRACODE_VERSION)/Fira_Code_v$(FIRACODE_VERSION).zip \
-		--output $(ROOT_DIR)/vendor/fonts/FiraCode.zip
-	@echo -e "\033[1;34m‣ Uncompress FiraCode\033[0m"
-	@unzip -o -d $(ROOT_DIR)/vendor/fonts/FiraCode $(ROOT_DIR)/vendor/fonts/FiraCode.zip
-
-	@echo -e "\033[1;34m‣ Download Upstream [Ubuntu]\033[0m"
-	@mkdir -p vendor/fonts/Ubuntu
-	@curl -sSfL https://assets.ubuntu.com/v1/0cef8205-ubuntu-font-family-0.83.zip \
-		--output $(ROOT_DIR)/vendor/fonts/Ubuntu.zip
-	@echo -e "\033[1;34m‣ Uncompress Ubuntu\033[0m"
-	@unzip -o -d $(ROOT_DIR)/vendor/fonts/Ubuntu $(ROOT_DIR)/vendor/fonts/Ubuntu.zip
-
-	@mkdir -p build
-	@touch "$(ROOT_DIR)/build/.prepared"
-
+.PHONY: ubuntu
+ubuntu: ubuntu-regular ubuntu-regular-italic ubuntumono-regular ubuntumono-regular-italic ## Build Ubuntu (All)
 
 .PHONY: clean
 clean: ## Clean build artifacts
-	@echo -e "\033[1;92m➜ $@ \033[0m"
-	rm -rf $(ROOT_DIR)/vendor
 	rm -rf $(ROOT_DIR)/build
 
 .PHONY: checksums
 checksums: ## Generate SHA256 checksums for artifacts
-	@echo -e "\033[1;92m➜ $@ \033[0m"
 	cd $(ROOT_DIR)/build/Cascadia && sha256sum  *.ttf >  ../SHA256SUMS.txt
 	cd $(ROOT_DIR)/build/Fantasque && sha256sum *.ttf >>  ../SHA256SUMS.txt
 	cd $(ROOT_DIR)/build/FiraCode && sha256sum *.ttf >>  ../SHA256SUMS.txt
 	cd $(ROOT_DIR)/build/Ubuntu && sha256sum *.ttf >>  ../SHA256SUMS.txt
 
-
-.PHONY: release-notes
-release-notes: ## Generate release notes
-	@echo -e "\033[1;92m➜ $@ \033[0m"
-	@mkdir -p $(ROOT_DIR)/build
-	@echo "# Release Notes" > $(ROOT_DIR)/build/release-notes.md
-	@echo "| Name | Upstream | Version |" >> $(ROOT_DIR)/build/release-notes.md
-	@echo "|---|---|---|" >> $(ROOT_DIR)/build/release-notes.md
-	@echo "| Caskaydia Cove | [Cascadia Code](https://github.com/microsoft/cascadia-code) | ![cascadia](https://img.shields.io/badge/version-v$(CASCADIA_CODE_VERSION)-blue?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
-	@echo "| Fantasque Sans Mono | [Fantasque Sans Mono](https://github.com/belluzj/fantasque-sans) | ![fantasque](https://img.shields.io/badge/version-$(FANTASQUE_VERSION)-brightgreen?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
-	@echo "| FiraCode | [FiraCode](https://github.com/tonsky/FiraCode) | ![fira](https://img.shields.io/badge/version-$(FIRACODE_VERSION)-brightgreen?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
-	@echo "| Ubuntu | [Ubuntu](https://design.ubuntu.com/font/) | ![ubuntu](https://img.shields.io/badge/version-$(UBUNTU_FONT_VERSION)-brightgreen?labelColor=313131)" >> $(ROOT_DIR)/build/release-notes.md
-
-	@echo "" >> $(ROOT_DIR)/build/release-notes.md
-	@echo "> - Generated by GitHub Build GH-$(GITHUB_RUN_NUMBER), using nerd fonts." >> $(ROOT_DIR)/build/release-notes.md
+.PHONY: all
+all: clean cascadia fantasque ubuntu release-notes checksums ## Build all fonts

@@ -2,20 +2,6 @@
 # Created by https://www.gitignore.io/api/linux,macos,python,windows,fontforge,virtualenv
 # Edit at https://www.gitignore.io/?templates=linux,macos,python,windows,fontforge,virtualenv
 
-### FontForge ###
-*.sfd-*
-*.sfd~
-
-# No Binaries
-
-*.ttf
-*.ttc
-*.woff
-*.pfb
-*.pfa
-*.pt3
-*.suit
-
 ### Linux ###
 *~
 
@@ -207,4 +193,3 @@ $RECYCLE.BIN/
 
 build/
 .prepare
-vendor/

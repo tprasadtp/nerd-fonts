@@ -7,7 +7,6 @@ Currently supports following custom builds.
 
   - Cascadia code
   - Fantasque Sans Mono
-  - FiraCode
   - Ubuntu
 
 ## Try
@@ -25,14 +24,14 @@ echo -e " \uE900  \uE901 \uE903 \uE904 \uE905 \uE906 \uE907 \uE908 \uE909 \uE90a
 |---|---|---
 | [Cloud Services](./docs/cloud-services.png) | E900 | E90F
 | [Git Service Providers](./docs/git-remotes.png) | EB00 | EB0A
-| [Hashicorp](./docs/hashicorp.png) | EC00 | EC06
-| [OS Logos](./docs/os-logos.png) | EC20 | EC35
-| [Other software](./docs/other-software.png) | EE00 | EE0E
+
+![git-remotes](./docs/git-remotes.png)
+![others](./docs/starship.png)
+
 
 ## Build
 
 ```bash
-make prepare
 make all
 ```
 
