@@ -24,7 +24,6 @@ jobs:
             --yes \
               fontforge \
               python3-fontforge \
-              python3-configparser \
               python3-coloredlogs
 
       - name: Build CascadiaCode Regular
