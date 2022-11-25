@@ -1,7 +1,7 @@
 # Custom Patched Nerd Fonts
 
 [![build](https://github.com/tprasadtp/starship-fonts/workflows/build/badge.svg)](https://github.com/tprasadtp/starship-fonts/actions?query=workflow%3Abuild)
-[![License](https://img.shields.io/badge/license-MIT-orange?labelColor=313131)](https://github.com/tprasadtp/starship-fonts/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/tprasadtp/starship-fonts?labelColor=313131)](https://github.com/tprasadtp/starship-fonts/blob/master/LICENSE)
 
 Currently supports following custom builds.
 
