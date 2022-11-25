@@ -9,87 +9,97 @@ on:
     branches:
       - master
       - dev
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    - name: Install FontForge
-      run: |
-        sudo add-apt-repository ppa:fontforge/fontforge -y -u
-        sudo apt-get install --no-install-recommends --yes fontforge python-pip  python-configparser
+      - name: Install
+        run: |
+          sudo apt-get install \
+            --no-install-recommends \
+            --yes \
+              fontforge \
+              python3-fontforge \
+              python3-coloredlogs
 
-    - name: Prepare
-      run: make prepare
+      - name: Build CascadiaCode Regular
+        run: make cascadiacode-regular
 
-    - name: LS
-      run: |
-        ls -R vendor
-        ls -R build
+      - name: Build CascadiaCode Italic
+        run: make cascadiacode-italic
 
-    - name: Build Cascadia Regular
-      run: make cascadia-regular
+      - name: Build CascadiaMono Regular
+        run: make cascadiamono-regular
 
-    - name: Build Cascadia Italic
-      run: make cascadia-italic
+      - name: Build CascadiaMono Italic
+        run: make cascadiamono-italic
 
-    - name: Build Cascadia Mono
-      run: make cascadia-mono
+      - name: Build FantasqueSansMono Regular
+        run: make fantasque-regular
 
-    - name: Build Fantasque-Sans-Mono
-      run: make fantasque
+      - name: Build FantasqueSansMono Italic
+        run: make fantasque-italic
 
-    - name: Build FiraCode
-      run: make firacode
+      - name: Build Ubuntu Regular
+        run: make ubuntu-regular
 
-    - name: Build Ubuntu Regular
-      run: make ubuntu-regular
+      - name: Build Ubuntu Italic
+        run: make ubuntu-regular-italic
 
-    - name: Build Ubuntu Mono
-      run: make ubuntu-mono
+      - name: Build UbuntuMono Regular
+        run: make ubuntumono-regular
 
-    - name: LS
-      run: ls -R build
+      - name: Build UbuntuMono Italic
+        run: make ubuntumono-regular-italic
 
-    # checksums
-    - name: Generate checksums
-      run: |
-        make release-notes
-        make checksums
-        cat build/SHA256SUMS.txt
+      - name: Generate checksums and release notes
+        run: |
+          make release-notes
+          make checksums
 
-    # Upload
-    - name: Upload CascadiaCode
-      uses: actions/upload-artifact@v2
-      with:
-        name:  CascadiaCode
-        path: build/Cascadia/
+      - name: LS
+        run: ls -R build
 
-    # Fantasque Sans Mono
-    - name: Upload Fantasque-Sans-Mono
-      uses: actions/upload-artifact@v2
-      with:
-        name:  Fantasque-Sans-Mono
-        path: build/Fantasque/
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          path: build/
+          name: patched-fonts
 
-    # FiraCode Sans Mono
-    - name: Upload FiraCode
-      uses: actions/upload-artifact@v2
-      with:
-        name:  FiraCode
-        path: build/FiraCode/
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs:
+      - build
+    steps:
+      - uses: actions/checkout@v3
 
-    # Ubuntu
-    - name: Upload Ubuntu
-      uses: actions/upload-artifact@v2
-      with:
-        name:  Ubuntu
-        path: build/Ubuntu/
+      - name: Download
+        uses: actions/download-artifact@v3
+        with:
+          path: build
+          name: patched-fonts
 
-    - name: Release
-      if: startsWith(github.ref, 'refs/tags/v')
-      run: ./scripts/release.sh
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: LS
+        run: ls -R build
+
+      - name: Release
+        run: |
+          gh release create \
+            --title "Nerd Fonts - $VERSION" \
+            --latest \
+            --notes-file build/release-notes.md \
+            "$VERSION" \
+            build/SHA256SUMS.txt \
+            build/Cascadia/*.ttf \
+            build/FantasqueSans/*.ttf \
+            build/Ubuntu/*.ttf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ github.ref_name }}
