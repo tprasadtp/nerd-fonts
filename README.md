@@ -24,19 +24,9 @@ Try re-opening your terminal if you just installed the font.
 bash -c 'echo -e "\uE900 \uE901 \uE903 \uE904 \uE905 \uE906 \uE907 \uE908 \uE909 \uE90A \uE90B \uE90C"'
 ```
 
-```bash
-bash -c 'echo -e "\uEB00 \uEB01 \uEB03 \uEB04 \uEB05 \uEB06 \uEB07 \uEB08 \uEB09 \uEB0A \uEB0B \uEB0C"'
-```
-
 ## Custom Glyphs
 
-| Type | From | To
-|---|---|---
-| [Cloud Services](./docs/cloud-services.png) | E900 | E95A
-| [Git Remotes](./docs/git-remotes.png) | EB00 | EB1F
-
-![git-remotes](./docs/git-remotes.png)
-![others](./docs/starship.png)
+![extra-glyphs](./docs/extra-glyphs.png)
 
 
 ## Build
